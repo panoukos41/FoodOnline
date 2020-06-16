@@ -1,0 +1,157 @@
+﻿@page "/store/{Id}"
+
+@using FoodOnline.Domain.Stores.Models
+@using FoodOnline.Domain.Stores.Catalogue
+@using FoodOnline.Domain.Orders.Commands
+@using FoodOnline.WebClient.Components
+@using Domain.ValueObjects
+
+@inject IFlurlClient http
+@inject ISerializer yamlSerializer
+@inject IDeserializer yamlDeserializer
+@inject ISessionStorageService sessionStorage
+@inject NavigationManager navigation
+
+<main class="container">
+    @if (StoreModel == null)
+    {
+        <div class="row h-100 justify-content-center align-items-center">
+            <Loading />
+        </div>
+    }
+    else
+    {
+        <nav class="navbar navbar-expand navbar-light rounded bg-light mx-0">
+            <div class="navbar-brand">@StoreModel.Name</div>
+            <div class="navbar-nav mr-auto">
+                <small style="font-size: medium">(@StoreModel.Address)</small>
+            </div>
+            @*<AuthorizeView>
+                <button class="btn btn-primary">@(IsFavorite ? "Remove Favorite" : "Add Favorite")</button>
+            </AuthorizeView>*@
+        </nav>
+
+        <div class="card my-2">
+            <div class="card-header">Description</div>
+            <div class="card-body">@StoreModel.Description</div>
+        </div>
+
+        @foreach (var category in Menu.Categories)
+        {
+            <div class="container-fluid rounded bg-primary text-white">
+                <div class="navbar-brand">@category.Title</div>
+            </div>
+            <ul class="list-group">
+                @foreach (var item in category.MenuItems)
+                {
+                    <li class="list-group-item list-group-item-action" @onclick="() => ItemModal.Show(item)">
+                        <h6>@item.Title <small>(@item.StartPrice&euro;)</small></h6>
+                        <div>@item.Description</div>
+                    </li>
+                }
+            </ul>
+        }
+
+        <div class="d-flex rounded mt-2 pl-3 bg-secondary text-white">
+            <div class="navbar-brand mr-auto">Cart @OrderItems.Sum(x => x.CalculatePrice())&euro;</div>
+            <button class="btn btn-primary @(OrderItems.Count == 0 || !StoreModel.IsOpen ? "invisible" : "")" @onclick="OrderModal.Show">
+                Place Order
+            </button>
+        </div>
+        <div class="d-flex flex-wrap">
+            @foreach (var item in OrderItems)
+            {
+                <div class="card card-body mt-1 mr-1" style="max-width: 15rem; overflow: hidden">
+                    <div class="text-nowrap">@item.Title</div>
+                    <div class="text-nowrap">@item.SelectedValues()</div>
+                    <div>(@item.CalculatePrice())</div>
+                    <button class="btn btn-primary" @onclick="() => OrderItems.Remove(item)">Remove</button>
+                </div>
+            }
+        </div>
+    }
+    <ItemModalComponent @ref="ItemModal" OnAddClicked="(item) => OrderItems.Add(item)" />
+
+    <BSModal @ref="OrderModal" IsCentered="true">
+        <BSModalHeader>Are you ready to order?</BSModalHeader>
+        <BSModalBody>
+            <div>You order's total is @OrderItems.Sum(x => x.CalculatePrice()) €</div>
+        </BSModalBody>
+        <BSModalFooter>
+            <button class="btn btn-danger" @onclick="Order">Continue</button>
+            <button class="btn btn-primary" @onclick="OrderModal.Hide">Edit</button>
+        </BSModalFooter>
+    </BSModal>
+</main>
+
+@code{
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    private string UserId { get; set; }
+
+    private StoreModel StoreModel { get; set; }
+
+    private List<MenuItem> OrderItems { get; set; } = new List<MenuItem>();
+
+    private Menu Menu { get; set; }
+
+    private ItemModalComponent ItemModal { get; set; }
+
+    private BSModal OrderModal { get; set; }
+
+    private Address address;
+
+    private bool IsFavorite { get; set; }
+
+    private async Task Order()
+    {
+        var yaml = yamlSerializer.Serialize(OrderItems);
+        var order = new CreateOrder
+        {
+            Address = null,
+            Entries = yaml,
+            IdempotencyToken = Guid.NewGuid(),
+            StoreId = StoreModel.Id,
+            TotalPriceEur = OrderItems.Sum(x => x.CalculatePrice()),
+            UserId = UserId
+        };
+
+        await sessionStorage.SetItemAsync("order", order);
+        await sessionStorage.SetItemAsync("address", address.ToString());
+
+        navigation.NavigateTo("order");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = navigation.ToAbsoluteUri(navigation.Uri);
+        var query = QueryHelpers.ParseNullableQuery(uri.Query ?? "");
+
+        if (query == null
+            || string.IsNullOrWhiteSpace(Id)
+            || !query.ContainsKey("address")
+            || !query.ContainsKey("region")
+            || !query.ContainsKey("city"))
+        {
+            navigation.NavigateTo("");
+            return;
+        }
+        address = new Address(query["address"], query["region"], query["city"], "Ελλάδα", "");
+
+        StoreModel = await http.GetStore(Id);
+
+        if (!StoreModel.IsPublished) navigation.NavigateTo("");
+
+        Menu = yamlDeserializer.Deserialize<Menu>(StoreModel.Catalogue);
+
+        var user = (await AuthState).User;
+
+        UserId = user.Identity.IsAuthenticated ? user.GetId() : null;
+
+        //http.
+    }
+}

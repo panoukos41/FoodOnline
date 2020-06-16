@@ -1,0 +1,34 @@
+﻿@using FoodOnline.Domain.Stores.Catalogue
+
+<div class="card my-1">
+    <div class="card-header">
+        @Entry.Name
+    </div>
+    <div class="d-flex flex-wrap">
+        @foreach (var item in Entry.Items)
+        {
+            var index = Entry.Items.IndexOf(item);
+            var css = Selected == index ? "btn-secondary" : "btn-outline-secondary";
+
+            <button class="btn @css m-1" @onclick="() => SelectionChanged(index)">
+                @item.Name (@item.PriceEur&euro;)
+            </button>
+        }
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public SelectSingle Entry { get; set; }
+
+    private int Selected
+    {
+        get => Entry.Selected;
+        set => Entry.Selected = value;
+    }
+
+    private void SelectionChanged(int selected)
+    {
+        Selected = selected;
+    }
+}

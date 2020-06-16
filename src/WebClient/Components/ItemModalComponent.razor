@@ -1,0 +1,53 @@
+﻿@using FoodOnline.Domain.Stores.Catalogue
+
+@inject ISerializer yamlSerializer
+@inject IDeserializer yamlDeserializer
+
+<BSModal @ref="Modal" IsCentered="true">
+    <BSModalHeader>@Item.Title (@Item.StartPrice)</BSModalHeader>
+    <BSModalBody>
+        <div>@Item.Description</div>
+        <div class="my-1">
+            @foreach (var entry in Item.Entries)
+            {
+                switch (entry)
+                {
+                    case SelectSingle single:
+                        <SelectSingleComponent Entry="single" />
+                        break;
+                    case SelectMany many:
+                        <SelectManyComponent Entry="many" />
+                        break;
+                }
+            }
+        </div>
+        <textarea class="form-control w-100" rows="3" placeholder="Any extra info ?" @bind="@Item.ExtraInfo" />
+    </BSModalBody>
+    <BSModalFooter>
+        <div>@Item.CalculatePrice()&euro;</div>
+        <BSButton Color="Color.Primary" @onclick="AddClicked">Add</BSButton>
+        <BSButton Color="Color.Secondary" @onclick="Modal.Hide">Cancel</BSButton>
+    </BSModalFooter>
+</BSModal>
+
+@code {
+    [Parameter]
+    public EventCallback<MenuItem> OnAddClicked { get; set; }
+
+    private MenuItem Item { get; set; } = new MenuItem();
+
+    private BSModal Modal { get; set; }
+
+    private async Task AddClicked()
+    {
+        await OnAddClicked.InvokeAsync(Item);
+        Modal.Hide();
+    }
+
+    public void Show(MenuItem item)
+    {
+        var yaml = yamlSerializer.Serialize(item);
+        Item = yamlDeserializer.Deserialize<MenuItem>(yaml);
+        Modal.Show();
+    }
+}

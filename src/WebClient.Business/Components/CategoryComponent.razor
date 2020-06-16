@@ -1,0 +1,35 @@
+﻿@using FoodOnline.Domain.Stores.Catalogue
+
+<div class="card my-1">
+    <div class="card-header d-flex align-items-center">
+        <CollapseButton CssBool="Collapse" OnClick="Collapse.Revert" />
+        <div class="input-group mr-auto" style="max-width: 50%">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Category</span>
+            </div>
+            <input type="text" class="form-control" placeholder="Category name" aria-label="Category's name" @bind-value="Category.Title" />
+        </div>
+        <button class="btn btn-secondary mx-1" type="button" @onclick="AddItem">Add Item</button>
+        <button class="btn btn-secondary mx-1" type="button" @onclick="() => OnRemoveCategory.InvokeAsync(Category)">X</button>
+    </div>
+    <div class="pl-3 pr-0 @Collapse">
+        @foreach (var item in Category.MenuItems)
+        {
+            <ItemComponent Item="item" OnRemoveItem="RemoveItem" />
+        }
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public MenuCategory Category { get; set; }
+
+    [Parameter]
+    public EventCallback<MenuCategory> OnRemoveCategory { get; set; }
+
+    private CssBool Collapse = new CssBool("collapse", "");
+
+    private void AddItem() => Category.MenuItems.Add(new MenuItem());
+
+    private void RemoveItem(MenuItem item) => Category.MenuItems.Remove(item);
+}

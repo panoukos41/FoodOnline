@@ -1,0 +1,25 @@
+﻿<nav class="navbar navbar-expand navbar-transparent container">
+    <NavLink class="navbar-brand" href="" Match="NavLinkMatch.All">
+        <div class="btn btn-primary ml-0">
+            Food Online Business
+        </div>
+    </NavLink>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <div class="navbar-nav mr-auto">
+        </div>
+        <div>
+            <LoginDisplay />
+        </div>
+    </div>
+</nav>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

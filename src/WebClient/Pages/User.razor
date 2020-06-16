@@ -1,0 +1,66 @@
+﻿@page "/user"
+
+@using FoodOnline.Domain.Users.Models
+@using FoodOnline.Domain.Users.Queries
+@using FoodOnline.Domain.Stores.Models
+
+@inject IFlurlClient http
+
+<main class="container">
+    <AuthorizeView>
+        <NotAuthorized>
+            <div class="row h-100 justify-content-center align-items-center">
+                <LoginFirst style="max-width: 20rem;" />
+            </div>
+        </NotAuthorized>
+        <Authorized>
+            @if (Model == null)
+            {
+                <div class="row h-100 justify-content-center align-items-center">
+                    <Loading />
+                </div>
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-header">
+                        @Model.Name (@Model.Id)
+                    </div>
+                    <div class="card-body">
+                        <p>Email: @Model.Email</p>
+                        <p>Provider: @Model.ProviderDisplayName</p>
+                    </div>
+                </div>
+
+            }
+
+            @code {
+
+                private UserModel Model { get; set; }
+
+                private List<StoreListModel> Stores { get; set; }
+
+                protected override async Task OnInitializedAsync()
+                {
+                    var user = (await authState).User;
+
+                    if (!user.Identity.IsAuthenticated) return;
+
+                    var id = user.Claims
+                        .Where(x => x.Type == "sub")
+                        .Select(x => x.Value)
+                        .First();
+
+                    Model = await http.GetUser(new GetUser { Id = id });
+
+                }
+            }
+        </Authorized>
+    </AuthorizeView>
+</main>
+
+@code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authState { get; set; }
+}

@@ -1,0 +1,38 @@
+﻿@using FoodOnline.Domain.Stores.Catalogue
+
+<div class="card my-1">
+    <div class="card-header d-flex align-items-center">
+        <CollapseButton CssBool="Collapse" OnClick="Collapse.Revert" />
+        <div class="input-group mr-auto" style="max-width: 30%">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Single Name</span>
+            </div>
+            <input type="text" class="form-control" placeholder="Name" aria-label="Category's name" @bind-value="Entry.Name" />
+        </div>
+        <span>The first entry is always the default selected</span>
+        <button class="btn btn-secondary mx-1" type="button" @onclick="AddItem">Add Item</button>
+        <button class="btn btn-secondary mx-1" type="button" @onclick="() => OnRemoveEntry.InvokeAsync(Entry)">X</button>
+    </div>
+    <div class="container-fluid @Collapse">
+        <div class="d-flex flex-wrap">
+            @foreach (var item in Entry.Items)
+            {
+                <MenuEntryComponent ItemEntry="item" OnRemoveItemEntry="RemoveItem" />
+            }
+        </div>
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public SelectSingle Entry { get; set; }
+
+    [Parameter]
+    public EventCallback<SelectSingle> OnRemoveEntry { get; set; }
+
+    private CssBool Collapse = new CssBool("collapse", "");
+
+    private void AddItem() => Entry.Items.Add(new MenuItemEntry());
+
+    private void RemoveItem(MenuItemEntry item) => Entry.Items.Remove(item);
+}

@@ -1,0 +1,28 @@
+﻿<BSModal @ref="Modal" IsCentered="true">
+    <BSModalHeader OnClick="Modal.Hide">@Order.TotalPriceEur&euro; <small>@Order.Address</small></BSModalHeader>
+    <BSModalBody>
+        @foreach (var entry in Order.Entries)
+        {
+            <ol>
+                <li>
+                    <div>@entry.Title</div>
+                    <div>@entry.SelectedValues()</div>
+                    <div>@entry.ExtraInfo</div>
+                </li>
+            </ol>
+        }
+    </BSModalBody>
+</BSModal>
+
+@code {
+    private Order Order { get; set; } = new Order();
+
+    private BSModal Modal { get; set; }
+
+    public void Show(Order order)
+    {
+        Console.WriteLine("Showing");
+        Order = order;
+        Modal.Show();
+    }
+}

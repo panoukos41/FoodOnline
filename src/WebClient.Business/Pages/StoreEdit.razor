@@ -1,0 +1,133 @@
+﻿@page "/edit/{StoreId}"
+
+@using FoodOnline.Domain.Stores.Models
+@using FoodOnline.Domain.Stores.Requests
+@using FoodOnline.Domain.Stores.Catalogue
+@using FoodOnline.WebClient.Business.Components
+@using static FoodOnline.WebClient.Business.Services.ApiStores
+
+<main class="container">
+    <AuthorizeView Roles="Admin, Employee, StoreOwner">
+        <NotAuthorized>
+            <div class="row h-100 justify-content-center align-items-center">
+                <NoAccess />
+            </div>
+        </NotAuthorized>
+
+        <Authorized>
+            @inject IFlurlClient http
+            @inject ISerializer yamlSerializer
+            @inject IJSRuntime js
+            @inject NavigationManager navigation
+
+            @if (Store is null)
+            {
+                <div class="row h-100 justify-content-center align-items-center">
+                    <Loading />
+                </div>
+            }
+            else
+            {
+                <nav class="navbar navbar-expand navbar-light rounded bg-light mx-0">
+                    <div class="navbar-brand">
+                        <a class="btn btn-outline-primary" href="store/@Store.Id">
+                            @Store.Name
+                        </a>
+                    </div>
+                    <div class="navbar-nav mr-auto">
+                        <small style="font-size: medium">(@Store.Address)</small>
+                    </div>
+                    <button class="btn @OpenCss mx-1" @onclick="() => Store.IsOpen = !Store.IsOpen">
+                        @(OpenCss.Value ? "Set Closed" : "Set Open")
+                    </button>
+                    <button class="btn @PublishCss mx-1" @onclick="() => Store.IsPublished = !Store.IsPublished">
+                        @(PublishCss.Value ? "Unpublish" : "Publish")
+                    </button>
+                </nav>
+
+                <div class="card my-2">
+                    <div class="card-header">Description</div>
+                    <textarea class="form-control w-100" rows="3" @bind="@Store.Description" />
+                </div>
+
+                <CatalogueComponent Yaml="@Store.Catalogue" OnSaveChanges="SaveChanges" />
+
+                <BSModal @ref="Modal" IsCentered="true" IgnoreEscape="true" IgnoreClickOnBackdrop="true">
+                    <BSModalHeader>Save ?</BSModalHeader>
+                    <BSModalBody>
+                        @if (Status == 1)
+                        {
+                            <BSProgress IsStriped="true" IsAnimated="true" Value="100" />
+                        }
+                        <p>Please don't close the page while saving is in progress!</p>
+                        @if (Status == 2)
+                        {
+                            <p>Uploaded !!</p>
+                        }
+                    </BSModalBody>
+                    <BSModalFooter>
+                        <BSButton Color="Color.Primary" @onclick="@ModalYes" IsDisabled="Status != 0">Yes</BSButton>
+                        <BSButton Color="Color.Secondary" @onclick="@ModalClose" IsDisabled="Status == 1">@(Status == 0 ? "Cancel" : "Close")</BSButton>
+                    </BSModalFooter>
+                </BSModal>
+            }
+
+            @code {
+                protected override async Task OnInitializedAsync()
+                {
+                    Store = await http.GetStore(StoreId);
+                    OpenCss = new CssBool(() => Store.IsOpen, "btn-outline-danger", "btn-outline-primary");
+                    PublishCss = new CssBool(() => Store.IsPublished, "btn-outline-danger", "btn-outline-primary");
+                }
+
+                private CssBool OpenCss;
+                private CssBool PublishCss;
+                private Menu menuToSave;
+                private StoreBusinessModel Store { get; set; }
+                private BSModal Modal { get; set; }
+                // 0 default, 1 saving, 2 done
+                private int Status { get; set; }
+
+                private void SaveChanges(Menu menu)
+                {
+                    if (Store.Description == null || menu.AnyNull())
+                    {
+                        _ = js.InvokeVoidAsync("alert", "Description must be set, and all catalogue items must have values except item descriptions");
+                        return;
+                    }
+                    menuToSave = menu;
+                    Modal.Show();
+                }
+
+                private async Task ModalYes()
+                {
+                    Status = 1;
+
+                    var yaml = yamlSerializer.Serialize(menuToSave);
+
+                    await http.UpdateStore(new UpdateStore
+                    {
+                        Id = StoreId,
+                        Catalogue = yaml,
+                        Description = Store.Description,
+                        Open = Store.IsOpen,
+                        Published = Store.IsPublished
+                    });
+
+                    Status = 2;
+                }
+
+                private void ModalClose()
+                {
+                    Status = 0;
+                    Modal.Hide();
+                }
+            }
+        </Authorized>
+    </AuthorizeView>
+</main>
+
+@code {
+    [Parameter]
+    public string StoreId { get; set; }
+}

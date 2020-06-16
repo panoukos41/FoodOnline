@@ -1,0 +1,22 @@
+﻿@page "/manage"
+
+<main class="container">
+    <AuthorizeView Roles="Admin, Employee">
+        <NotAuthorized>
+            <div class="row h-100 justify-content-center align-items-center">
+                <NoAccess />
+            </div>
+        </NotAuthorized>
+
+        <Authorized>
+            <h1>Manage (@context.User.GetRole())</h1>
+
+            @code {
+                protected override Task OnInitializedAsync()
+                {
+                    return base.OnInitializedAsync();
+                }
+            }
+        </Authorized>
+    </AuthorizeView>
+</main>

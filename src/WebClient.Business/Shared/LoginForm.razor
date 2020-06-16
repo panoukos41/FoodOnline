@@ -1,0 +1,58 @@
+﻿@using FoodOnline.Domain.Auth.Requests
+
+@inject IAuthService auth
+
+<BSForm Model="Model"
+        Context="formContext"
+        OnValidSubmit="ValidSubmit"
+        Class="rounded bg-white p-5">
+
+    @if (Status == 1)
+    {
+        <BSProgress IsStriped="true" IsAnimated="true" Value="100" />
+    }
+
+    <BSFormGroup>
+        <BSLabel for="username">Username</BSLabel>
+        <BSInput id="username" InputType="InputType.Text" @bind-Value="Model.Email" />
+    </BSFormGroup>
+    <BSFormGroup>
+        <BSLabel for="pass">Password</BSLabel>
+        <BSInput id="pass" InputType="InputType.Password" ValidateOnChange="true" @bind-Value="Model.Password" />
+    </BSFormGroup>
+
+    <button class="btn btn-primary" type="submit">Login</button>
+    @if (Status == 3)
+    {
+        <span class="badge badge-danger">Username or password is wrong!</span>
+    }
+</BSForm>
+
+@code{
+
+    private LoginUser Model = new LoginUser();
+
+    // 1 loading, 3 failed
+    private int Status { get; set; }
+
+    private bool running;
+
+    private async Task ValidSubmit()
+    {
+        if (running) return;
+
+        try
+        {
+            Status = 1;
+            var result = await auth.LoginAsync(Model);
+        }
+        catch
+        {
+            Status = 3;
+        }
+        finally
+        {
+            running = false;
+        }
+    }
+}

@@ -1,0 +1,60 @@
+﻿@using FoodOnline.Domain.Stores.Catalogue
+
+<div class="card my-1">
+    <div class="card-header d-flex align-items-center">
+        <CollapseButton CssBool="Collapse" OnClick="Collapse.Revert" />
+        <div class="input-group mr-auto" style="max-width: 30%">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Title</span>
+            </div>
+            <input type="text" class="form-control" placeholder="Title name" aria-label="Category's name" @bind-value="Item.Title" />
+        </div>
+        <button class="btn btn-secondary mx-1" type="button" @onclick="AddSelectSingle">Add Select Single</button>
+        <button class="btn btn-secondary mx-1" type="button" @onclick="AddSelectMany">Add Select Many</button>
+        <button class="btn btn-secondary mx-1" type="button" @onclick="() => OnRemoveItem.InvokeAsync(Item)">X</button>
+    </div>
+    <div class="card-body pl-3 pr-0 @Collapse">
+        <div class="input-group my-1">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Start Price</span>
+            </div>
+            <input type="number" step="0.01" class="form-control" @bind="Item.StartPrice" />
+        </div>
+        <div class="input-group my-1">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Description</span>
+            </div>
+            <textarea class="form-control" rows="1" @bind="Item.Description"></textarea>
+        </div>
+        @foreach (var entry in Item.Entries)
+        {
+            switch (entry)
+            {
+                case SelectSingle single:
+                    <SelectSingleComponent Entry="single" OnRemoveEntry="RemoveSelectSingle" />
+                    break;
+                case SelectMany many:
+                    <SelectManyComponent Entry="many" OnRemoveEntry="RemoveSelectMany" />
+                    break;
+            }
+        }
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public MenuItem Item { get; set; }
+
+    [Parameter]
+    public EventCallback<MenuItem> OnRemoveItem { get; set; }
+
+    private CssBool Collapse = new CssBool("collapse", "");
+
+    private void AddSelectSingle() => Item.Entries.Add(new SelectSingle());
+
+    private void RemoveSelectSingle(SelectSingle single) => Item.Entries.Remove(single);
+
+    private void AddSelectMany() => Item.Entries.Add(new SelectMany());
+
+    private void RemoveSelectMany(SelectMany many) => Item.Entries.Remove(many);
+}

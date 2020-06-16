@@ -1,0 +1,74 @@
+﻿@page "/stores"
+
+@using FoodOnline.Domain.Stores.Models
+@using FoodOnline.Domain.Stores.Queries
+
+@inject IFlurlClient http
+@inject NavigationManager navigation
+
+<main class="container">
+    @if (StoreModels.IsNull())
+    {
+        <div class="row h-100 justify-content-center align-items-center">
+            <Loading />
+        </div>
+    }
+    else if (StoreModels.IsEmpty())
+    {
+        <div class="row h-100 justify-content-center align-items-center">
+            <span class="badge badge-info" style="font-size: large">
+                Sorry but there are no shops that serve this location right now!
+            </span>
+        </div>
+    }
+    else
+    {
+        <div class="list-group">
+            @foreach (var store in StoreModels)
+            {
+                for (int i = 0; i < 1; i++)
+                {
+                    <a href="@QueryAnchor(store.Id)" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">@store.Name</h5>
+                        </div>
+                        <small>@store.Address</small>
+                    </a>
+                }
+            }
+        </div>
+    }
+</main>
+
+@code {
+    private IEnumerable<StoreListModel> StoreModels { get; set; }
+
+    private GetStores Query { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = navigation.ToAbsoluteUri(navigation.Uri);
+        var query = QueryHelpers.ParseNullableQuery(uri.Query ?? "");
+
+        if (query == null
+            || !query.ContainsKey("address")
+            || !query.ContainsKey("region")
+            || !query.ContainsKey("city"))
+        {
+            navigation.NavigateTo("");
+            return;
+        }
+
+        Query = new GetStores
+        {
+            IsOpen = query.ContainsKey("isopen") ? query["isopen"] != "false" : true,
+            Address = query["address"],
+            Region = query["region"],
+            City = query["city"]
+        };
+
+        StoreModels = await http.GetStores(Query);
+    }
+
+    private string QueryAnchor(string id) => $"store/{id}?address={Query.Address}&region={Query.Region}&city={Query.City}";
+}

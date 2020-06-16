@@ -1,0 +1,18 @@
+﻿@page "/logout"
+
+@inject IAuthService auth
+@inject NavigationManager nav
+
+<main class="container">
+    <div class="row h-100 justify-content-center align-items-center">
+        <Loading />
+    </div>
+</main>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await auth.LogoutAsync();
+        nav.NavigateTo("");
+    }
+}

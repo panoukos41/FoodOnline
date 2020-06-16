@@ -1,0 +1,30 @@
+﻿@page "/"
+
+@inject NavigationManager navigation
+
+<main class="container">
+</main>
+
+@code{
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthState1 { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var role = (await AuthState1).User.GetRole();
+        var id = (await AuthState1).User.GetId();
+        var storeId = (await AuthState1).User.GetStoreId();
+
+        var page = role switch
+        {
+            var x when
+                x == "Admin" ||
+                x == "Employee" => "manage",
+            "StoreOwner" => $"stores/{id}",
+            "StoreEmployee" => $"store/{storeId}",
+            _ => "/"
+        };
+
+        navigation.NavigateTo(page);
+    }
+}

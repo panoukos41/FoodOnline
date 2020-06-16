@@ -1,0 +1,124 @@
+﻿@page "/register"
+
+@using FoodOnline.Domain.Auth.Requests
+@using FoodOnline.Domain.Auth.Validators
+@using BlazorStrap.Extensions.FluentValidation
+
+@inject IAuthService auth
+
+<main class="container">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="form-container">
+            @if (Status == 4)
+            {
+                <LogedIn />
+            }
+            else if (Status == 0)
+            {
+                <BSForm Model="Model"
+                        Context="formContext"
+                        OnValidSubmit="ValidSubmit"
+                        Class="rounded bg-white p-5">
+
+                    <FluentValidator TValidator="RegisterUserValidator" />
+
+                    <BSFormGroup>
+                        <BSLabel for="email">Email</BSLabel>
+                        <BSInput id="email" InputType="InputType.Email" @bind-Value="Model.Email" />
+                        <BSFormFeedback For="() => Model.Email" />
+                    </BSFormGroup>
+
+                    <BSFormGroup>
+                        <BSLabel for="name">Name</BSLabel>
+                        <BSInput id="name" InputType="InputType.Text" @bind-Value="Model.Name" />
+                        <BSFormFeedback For="() => Model.Name" />
+                    </BSFormGroup>
+
+                    <BSFormGroup>
+                        <BSLabel for="pass">Password</BSLabel>
+                        <BSInput id="pass" InputType="InputType.Password" ValidateOnChange="true" @bind-Value="Model.Password" />
+                        <BSFormFeedback For="() => Model.Password" />
+                    </BSFormGroup>
+
+                    <BSFormGroup>
+                        <BSLabel for="passconfirm">Password Confirmation</BSLabel>
+                        <BSInput id="passconfirm" InputType="InputType.Password" ValidateOnChange="true" @bind-Value="Model.PasswordConfirmation" />
+                        <BSFormFeedback For="() => Model.PasswordConfirmation" />
+                    </BSFormGroup>
+
+                    <button class="btn btn-primary" type="submit">Register</button>
+                </BSForm>
+            }
+            else if (Status == 1)
+            {
+                <Loading />
+            }
+            else if (Status == 2)
+            {
+                <div class="card text-white bg-success">
+                    <div class="card-header">
+                        Success!
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">You are registered click the button to go and login !</p>
+                        <a href="/" class="btn btn-primary">Home</a>
+                    </div>
+                </div>
+            }
+            else if (Status == 3)
+            {
+                <div class="card text-white bg-danger">
+                    <div class="card-header">
+                        Error!
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Something went wrong on our end, please try again later or contact customer support!</p>
+                        <a href="/Login" class="btn btn-primary">Login</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</main>
+
+@code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthState { get; set; }
+
+    // Lazy initialization for our model in case the form is never shown.
+    private RegisterUser _model;
+
+    private RegisterUser Model => _model ??= new RegisterUser();
+
+    // 0 register, 1 loading, 2 success, 3 failed
+    private int Status { get; set; }
+
+    private bool running;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Status = (await AuthState).User.Identity.IsAuthenticated ? 4 : 0;
+    }
+
+    private async Task ValidSubmit()
+    {
+        if (running) return;
+
+        try
+        {
+            running = true;
+            Status = 1;
+            await auth.RegisterAsync(Model);
+            Status = 2;
+        }
+        catch
+        {
+            Status = 3;
+        }
+        finally
+        {
+            running = false;
+        }
+    }
+}

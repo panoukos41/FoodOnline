@@ -1,0 +1,33 @@
+﻿@inherits LayoutComponentBase
+
+<NavMenu />
+
+<AuthorizeView Roles="Admin, Employee, StoreOwner, StoreEmployee">
+    <Authorized>
+        @Body
+    </Authorized>
+    <NotAuthorized>
+        <main class="container">
+            <div class="row h-100 justify-content-center align-items-center">
+                <div class="form-container">
+                    @if (!context.User.Identity.IsAuthenticated)
+                    {
+                        <LoginForm />
+                    }
+                    else
+                    {
+                        <NoAccess />
+                    }
+                </div>
+            </div>
+        </main>
+    </NotAuthorized>
+</AuthorizeView>
+
+<footer class="container">
+    <div class="rounded bg-light my-1 p-2">
+        <a target="_blank" href="https://icons8.com/icons/set/circled-f">Circled F icon</a> by <a target="_blank" href="https://icons8.com">Icons8</a>
+        <br />
+        <a target="_blank" href="https://pixabay.com/images/id-2068272/">Background image</a> by <a target="_blank" href="https://pixabay.com/el/users/daria-yakovleva-3938704/">Pixabay/Daria-Yakovleva</a>
+    </div>
+</footer>

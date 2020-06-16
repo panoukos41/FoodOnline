@@ -1,0 +1,169 @@
+﻿@page "/store/{Id}"
+
+@using Microsoft.AspNetCore.SignalR.Client
+@using FoodOnline.Domain.Enums
+@using FoodOnline.Domain.Orders.Commands
+@using FoodOnline.Domain.Orders.Models
+@using FoodOnline.Domain.Stores.Catalogue
+@using FoodOnline.WebClient.Business.Components
+
+@implements IDisposable
+
+@inject IDeserializer yamlDeserializer
+
+<main class="container-fluid">
+    <AuthorizeView Roles="Admin, Employee, StoreOwner, StoreEmployee">
+        <NotAuthorized>
+            <div class="row h-100 justify-content-center align-items-center">
+                <NoAccess />
+            </div>
+        </NotAuthorized>
+
+        <Authorized>
+            <div class="row h-100">
+                <div class="col-2 overflow-auto">
+                    <div class="alert alert-success text-center mb-2">Delivered</div>
+                    @foreach (var order in DeliveredOrders)
+                    {
+                        <div class="list-group">
+                            <OrderComponent Order="order"
+                                            RightClicked="() => UpdateOrder(order, OrderState.Delivering)"
+                                            Button="OrderComponent.ButtonType.Right"
+                                            ViewClicked="() => OrderModal.Show(order)" />
+                        </div>
+                    }
+                </div>
+                <div class="col-3 overflow-auto">
+                    <div class="alert alert-warning text-center mb-2">Delivering</div>
+                    @foreach (var order in DeliveringOrders)
+                    {
+                        <div class="list-group">
+                            <OrderComponent Order="order"
+                                            LeftClicked="() => UpdateOrder(order, OrderState.Delivered)"
+                                            RightClicked="() => UpdateOrder(order, OrderState.Confirmed)"
+                                            Button="OrderComponent.ButtonType.Both"
+                                            ViewClicked="() => OrderModal.Show(order)" />
+                        </div>
+                    }
+                </div>
+                <div class="col-3 overflow-auto">
+                    <div class="alert alert-danger text-center mb-2">Confirmed</div>
+                    @foreach (var order in ConfirmedOrders)
+                    {
+                        <div class="list-group">
+                            <OrderComponent Order="order"
+                                            LeftClicked="() => UpdateOrder(order, OrderState.Delivering)"
+                                            Button="OrderComponent.ButtonType.Left"
+                                            ViewClicked="() => OrderModal.Show(order)" />
+                        </div>
+                    }
+                </div>
+                <div class="col-2 overflow-auto">
+                    <div class="alert alert-primary text-center mb-2">New Orders</div>
+                    @foreach (var order in NewOrders)
+                    {
+                        <div class="list-group">
+                            <OrderComponent Order="order"
+                                            LeftClicked="() => UpdateOrder(order, OrderState.Confirmed)"
+                                            Button="OrderComponent.ButtonType.Left"
+                                            ViewClicked="() => OrderModal.Show(order)" />
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <OrderModal @ref="OrderModal" />
+
+            @code {
+                private HubConnection hubConnection;
+                private OrderModal OrderModal { get; set; }
+
+                private List<Order> NewOrders { get; set; } = new List<Order>();
+                private List<Order> ConfirmedOrders { get; set; } = new List<Order>();
+                private List<Order> DeliveringOrders { get; set; } = new List<Order>();
+                private List<Order> DeliveredOrders { get; set; } = new List<Order>();
+
+                protected override async Task OnInitializedAsync()
+                {
+                    hubConnection = new HubConnectionBuilder()
+                        .WithUrl("http://localhost:4000/api/order")
+                        .Build();
+
+                    hubConnection.On<NewOrderModel, string>("NewOrder", (newOrder, address) =>
+                    {
+                        var order = new Order
+                        {
+                            OrderId = newOrder.OrderId,
+                            ConnectionId = newOrder.ConnectionId,
+                            TotalPriceEur = newOrder.TotalPriceEur,
+                            State = OrderState.Received,
+                            Address = address,
+                            Entries = yamlDeserializer.Deserialize<List<MenuItem>>(newOrder.Entries)
+                        };
+
+                        NewOrders.Insert(0, order);
+                        StateHasChanged();
+                    });
+
+                    await hubConnection.StartAsync();
+                    await hubConnection.SendAsync("Connect", Id, hubConnection.ConnectionId);
+                }
+
+                private async Task UpdateOrder(Order order, OrderState newState)
+                {
+                    switch (order.State, newState)
+                    {
+                        case (OrderState.Received, OrderState.Confirmed):
+                            NewOrders.Remove(order);
+                            order.State = newState;
+                            ConfirmedOrders.Insert(0, order);
+                            break;
+
+                        case (OrderState.Confirmed, OrderState.Delivering):
+                            ConfirmedOrders.Remove(order);
+                            order.State = newState;
+                            DeliveringOrders.Insert(0, order);
+                            break;
+
+                        case (OrderState.Delivering, OrderState.Confirmed):
+                            DeliveringOrders.Remove(order);
+                            order.State = newState;
+                            ConfirmedOrders.Insert(0, order);
+                            break;
+
+                        case (OrderState.Delivered, OrderState.Delivering):
+                            DeliveredOrders.Remove(order);
+                            order.State = newState;
+                            DeliveringOrders.Insert(0, order);
+                            break;
+
+                        case (OrderState.Delivering, OrderState.Delivered):
+                            DeliveringOrders.Remove(order);
+                            order.State = newState;
+                            DeliveredOrders.Insert(0, order);
+                            break;
+                    }
+
+                    await hubConnection.SendAsync("UpdateOrder", new UpdateOrder
+                    {
+                        OrderState = order.State,
+                        ConnectionId = order.ConnectionId,
+                        OrderId = order.OrderId
+                    });
+                }
+
+                public void Dispose()
+                {
+                    _ = hubConnection.SendAsync("Dissconnect", Id, hubConnection.ConnectionId);
+                    _ = hubConnection.DisposeAsync();
+                }
+            }
+        </Authorized>
+    </AuthorizeView>
+</main>
+
+@code {
+
+    [Parameter]
+    public string Id { get; set; }
+}
