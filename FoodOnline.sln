@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29926.136
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4DE09836-9C8A-47B7-B96A-1BBD518C13C0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src2", "src2", "{4DE09836-9C8A-47B7-B96A-1BBD518C13C0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "src\Application\Application.csproj", "{15C802C8-0C31-40C6-A29F-A1CB70AD72F3}"
 EndProject
@@ -25,15 +25,32 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Shared", "src\Domain
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebClient", "src\WebClient\WebClient.csproj", "{32E752A9-F5EE-48E6-8045-10CE6CC687A9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9EA94564-EC31-40B8-A092-BAA94EED8477}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{9EA94564-EC31-40B8-A092-BAA94EED8477}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
 		src\ef-app.ps1 = src\ef-app.ps1
 		src\ef-foodonline.ps1 = src\ef-foodonline.ps1
+		global.json = global.json
+		LICENSE.md = LICENSE.md
+		publish.ps1 = publish.ps1
+		README.md = README.md
+		version.json = version.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebClient.Shared", "src\WebClient.Shared\WebClient.Shared.csproj", "{0DAC5147-F4F6-4F88-A09D-279C91DE8048}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebClient.Business", "src\WebClient.Business\WebClient.Business.csproj", "{3226469A-A1BE-4E2B-9DF8-83CD6C99F3B2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{73C80547-88E2-4A3F-A9D3-CF46299F237F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodOnline", "src\FoodOnline\FoodOnline.csproj", "{877F23C7-8F32-4495-815F-9121AC7628F5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodOnline.Infrastructure", "src\FoodOnline.Infrastructure\FoodOnline.Infrastructure.csproj", "{84C70D2E-371E-4AAA-BD68-A6CE6C632991}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "src\ConsoleApp\ConsoleApp.csproj", "{E93ED4E3-0E02-48D7-A461-6308B33B175F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodOnline.WebAPI", "src\FoodOnline.WebAPI\FoodOnline.WebAPI.csproj", "{55719E2B-341D-47DC-96DC-D4BC16AF88D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +102,22 @@ Global
 		{3226469A-A1BE-4E2B-9DF8-83CD6C99F3B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3226469A-A1BE-4E2B-9DF8-83CD6C99F3B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3226469A-A1BE-4E2B-9DF8-83CD6C99F3B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{877F23C7-8F32-4495-815F-9121AC7628F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{877F23C7-8F32-4495-815F-9121AC7628F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{877F23C7-8F32-4495-815F-9121AC7628F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{877F23C7-8F32-4495-815F-9121AC7628F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84C70D2E-371E-4AAA-BD68-A6CE6C632991}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84C70D2E-371E-4AAA-BD68-A6CE6C632991}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84C70D2E-371E-4AAA-BD68-A6CE6C632991}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84C70D2E-371E-4AAA-BD68-A6CE6C632991}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E93ED4E3-0E02-48D7-A461-6308B33B175F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E93ED4E3-0E02-48D7-A461-6308B33B175F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E93ED4E3-0E02-48D7-A461-6308B33B175F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E93ED4E3-0E02-48D7-A461-6308B33B175F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55719E2B-341D-47DC-96DC-D4BC16AF88D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55719E2B-341D-47DC-96DC-D4BC16AF88D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55719E2B-341D-47DC-96DC-D4BC16AF88D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55719E2B-341D-47DC-96DC-D4BC16AF88D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,6 +134,10 @@ Global
 		{32E752A9-F5EE-48E6-8045-10CE6CC687A9} = {4DE09836-9C8A-47B7-B96A-1BBD518C13C0}
 		{0DAC5147-F4F6-4F88-A09D-279C91DE8048} = {4DE09836-9C8A-47B7-B96A-1BBD518C13C0}
 		{3226469A-A1BE-4E2B-9DF8-83CD6C99F3B2} = {4DE09836-9C8A-47B7-B96A-1BBD518C13C0}
+		{877F23C7-8F32-4495-815F-9121AC7628F5} = {73C80547-88E2-4A3F-A9D3-CF46299F237F}
+		{84C70D2E-371E-4AAA-BD68-A6CE6C632991} = {73C80547-88E2-4A3F-A9D3-CF46299F237F}
+		{E93ED4E3-0E02-48D7-A461-6308B33B175F} = {73C80547-88E2-4A3F-A9D3-CF46299F237F}
+		{55719E2B-341D-47DC-96DC-D4BC16AF88D9} = {73C80547-88E2-4A3F-A9D3-CF46299F237F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D09D776A-8EFA-4DFF-A336-014D7FF656C2}
