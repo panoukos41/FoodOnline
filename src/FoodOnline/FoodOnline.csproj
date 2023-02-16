@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--<PackageReference Include="Mediator.Abstractions" Version="2.0.30" />-->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Requests\OrderRequests\" />
+    <Folder Include="Requests\StoreRequests\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ardalis.SmartEnum" Version="7.0.0" />
+    <PackageReference Include="Ardalis.SmartEnum.SystemTextJson" Version="2.1.0" />
+    <PackageReference Include="FluentValidation" Version="11.4.0" />
+    <PackageReference Include="Mediator.Abstractions" Version="2.0.30" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>
