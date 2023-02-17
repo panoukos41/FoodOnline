@@ -1,16 +1,13 @@
 ﻿using FoodOnline.Common;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FoodOnline.Infrastructure.Serializesrs.Bson;
 
 public sealed class RoleBsonSerializer : SerializerBase<Role>
 {
+    public static bool TryRegister() => BsonSerializer.TryRegisterSerializer(new RoleBsonSerializer());
+
     public override Role Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
     {
         var raw = context.Reader.ReadString();
