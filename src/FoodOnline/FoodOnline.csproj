@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -16,6 +16,7 @@
   <ItemGroup>
     <PackageReference Include="Ardalis.SmartEnum" Version="7.0.0" />
     <PackageReference Include="Ardalis.SmartEnum.SystemTextJson" Version="2.1.0" />
+    <PackageReference Include="Dunet" Version="1.7.1" PrivateAssets="all" />
     <PackageReference Include="FluentValidation" Version="11.4.0" />
     <PackageReference Include="Mediator.Abstractions" Version="2.0.30" PrivateAssets="all" />
   </ItemGroup>
