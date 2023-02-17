@@ -6,11 +6,11 @@ namespace FoodOnline.Infrastructure.Handlers;
 
 public abstract class UpsertHandler<TCommand, TModel> :
     AbstractHandler,
-    ICommandHandler<TCommand, TModel>
+    ICommandHandler<TCommand, Result<TModel>>
     where TCommand : Upsert<TModel>
     where TModel : class, IModel
 {
-    public async ValueTask<TModel> Handle(TCommand command, CancellationToken cancellationToken)
+    public async ValueTask<Result<TModel>> Handle(TCommand command, CancellationToken cancellationToken)
     {
         var client = new MongoClient("mongodb://admin:password@localhost:3306");
         var db = client.GetDatabase("test");

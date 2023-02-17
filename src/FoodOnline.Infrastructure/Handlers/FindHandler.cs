@@ -6,11 +6,11 @@ namespace FoodOnline.Infrastructure.Handlers;
 
 public abstract class FindHandler<TRequest, TModel> :
     AbstractHandler,
-    IRequestHandler<TRequest, TModel>
+    IRequestHandler<TRequest, Result<TModel>>
     where TRequest : Find<TModel>
     where TModel : class, IModel
 {
-    public async ValueTask<TModel> Handle(TRequest request, CancellationToken cancellationToken)
+    public async ValueTask<Result<TModel>> Handle(TRequest request, CancellationToken cancellationToken)
     {
         var client = new MongoClient("mongodb://admin:password@localhost:3306");
         var db = client.GetDatabase("test");

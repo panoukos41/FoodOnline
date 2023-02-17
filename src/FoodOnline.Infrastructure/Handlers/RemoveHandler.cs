@@ -6,11 +6,11 @@ namespace FoodOnline.Infrastructure.Handlers;
 
 public abstract class RemoveHandler<TCommand, TModel> :
     AbstractHandler,
-    ICommandHandler<TCommand>
+    ICommandHandler<TCommand, Result<Unit>>
     where TCommand : Remove<TModel>
     where TModel : class, IModel
 {
-    public async ValueTask<Unit> Handle(TCommand command, CancellationToken cancellationToken)
+    public async ValueTask<Result<Unit>> Handle(TCommand command, CancellationToken cancellationToken)
     {
         var client = new MongoClient("mongodb://admin:password@localhost:3306");
         var db = client.GetDatabase("test");
