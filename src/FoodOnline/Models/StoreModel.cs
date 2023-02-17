@@ -1,8 +1,8 @@
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace FoodOnline.Models;
 
-public record StoreModel : IModel
+public record StoreModel : Valid<StoreModel, StoreModelValidator>, IModel
 {
     public required Uuid Id { get; init; }
 }

@@ -1,4 +1,4 @@
-using FluentValidation;
+﻿using FluentValidation;
 using FoodOnline.Common;
 
 namespace FoodOnline.Models;
