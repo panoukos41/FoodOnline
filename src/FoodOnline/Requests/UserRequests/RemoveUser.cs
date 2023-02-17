@@ -9,7 +9,7 @@ namespace FoodOnline.Requests.UserRequests;
 
 public sealed record RemoveUser : Remove<UserModel>
 {
-    public RemoveUser(string id) : base(id)
+    public RemoveUser(Uuid id) : base(id)
     {
     }
 

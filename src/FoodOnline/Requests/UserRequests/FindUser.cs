@@ -4,7 +4,7 @@ namespace FoodOnline.Requests.UserRequests;
 
 public sealed record FindUser : Find<UserModel>
 {
-    public FindUser(string id) : base(id)
+    public FindUser(Uuid id) : base(id)
     {
     }
 }

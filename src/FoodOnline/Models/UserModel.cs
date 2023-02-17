@@ -1,11 +1,11 @@
-﻿using FluentValidation;
+using FluentValidation;
 using FoodOnline.Common;
 
 namespace FoodOnline.Models;
 
 public sealed record UserModel : Valid<UserModel, UserModelValidator>, IModel
 {
-    public required string Id { get; init; }
+    public required Uuid Id { get; init; }
 
     public byte[] Rev { get; init; } = Array.Empty<byte>();
 

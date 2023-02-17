@@ -1,13 +1,13 @@
-﻿using FoodOnline.Models;
+using FoodOnline.Models;
 
 namespace FoodOnline.Requests;
 
 public abstract record Remove<TModel> : ICommand
     where TModel : class, IModel
 {
-    public string Id { get; }
+    public Uuid Id { get; }
 
-    protected Remove(string id)
+    protected Remove(Uuid id)
     {
         Id = id;
     }

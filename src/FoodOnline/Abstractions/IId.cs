@@ -2,5 +2,5 @@
 
 public interface IId
 {
-    string Id { get; init; }
+    Uuid Id { get; init; }
 }
