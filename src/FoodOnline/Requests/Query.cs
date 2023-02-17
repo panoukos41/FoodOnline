@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace FoodOnline.Requests;
 
-public abstract record Query<T> : IQuery<T>
+public abstract record Query<T> : IQuery<Result<T>>
 {
 }
