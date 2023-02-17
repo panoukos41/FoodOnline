@@ -1,4 +1,5 @@
 ﻿using Dunet;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -33,5 +34,17 @@ public partial record Result<T> : IResult
             Error = ex.GetType().Name;
             Reason = ex.Message;
         }
+    }
+}
+
+public static class ResultMixins
+{
+    public static T? TryGetValue<T>(this Result<T> result)
+        => result.Match<T?>(static ok => ok.Value, static err => default);
+
+    public static bool TryGetValue<T>(this Result<T> result, [NotNullWhen(true), MaybeNullWhen(false)] out T? value)
+    {
+        value = TryGetValue(result);
+        return value is { };
     }
 }
