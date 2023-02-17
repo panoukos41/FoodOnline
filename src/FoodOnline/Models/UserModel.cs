@@ -7,8 +7,6 @@ public sealed record UserModel : Valid<UserModel, UserModelValidator>, IModel
 {
     public required Uuid Id { get; init; }
 
-    public byte[] Rev { get; init; } = Array.Empty<byte>();
-
     public required string Email { get; set; }
 
     public required string Name { get; set; }

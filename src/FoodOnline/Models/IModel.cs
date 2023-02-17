@@ -2,6 +2,6 @@
 
 namespace FoodOnline.Models;
 
-public interface IModel : IId, IRev
+public interface IModel : IId, IValid
 {
 }
