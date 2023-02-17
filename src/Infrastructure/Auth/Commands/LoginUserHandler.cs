@@ -6,7 +6,6 @@ using FoodOnline.Domain.Users.Models;
 using FoodOnline.Infrastructure.Identity;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace FoodOnline.Infrastructure.Auth.Commands
 {
