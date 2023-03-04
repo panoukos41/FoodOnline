@@ -1,4 +1,6 @@
-﻿namespace FoodOnline.Models;
+﻿using FoodOnline.Validation;
+
+namespace FoodOnline.Models;
 
 public record OrderModel : Valid<StoreModel, StoreModelValidator>, IModel
 {

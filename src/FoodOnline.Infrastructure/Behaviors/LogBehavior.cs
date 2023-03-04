@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using FoodOnline.Abstractions.Requests;
+using Serilog;
 
 namespace FoodOnline.Infrastructure.Behaviors;
 
@@ -7,9 +8,14 @@ public sealed class LogBehavior<TMessage, TResponse> : IPipelineBehavior<TMessag
 {
     public ValueTask<TResponse> Handle(TMessage message, CancellationToken cancellationToken, MessageHandlerDelegate<TMessage, TResponse> next)
     {
-        Console.WriteLine(message);
-
-        Log.Information("RQST {Request}", message);
+        if (message is ISelfLogging customLogging)
+        {
+            customLogging.Log(Log.Logger);
+        }
+        else
+        {
+            Log.Information("RQST {Request}", message);
+        }
 
         return next(message, cancellationToken);
     }

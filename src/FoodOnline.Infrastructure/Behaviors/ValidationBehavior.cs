@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using FoodOnline.Abstractions;
+using FoodOnline.Validation;
 
 namespace FoodOnline.Infrastructure.Behaviors;
 

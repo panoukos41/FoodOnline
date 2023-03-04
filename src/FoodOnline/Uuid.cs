@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace FoodOnline;
 
+[JsonConverter(typeof(UuidJsonConverter))]
 public readonly struct Uuid : IParsable<Uuid>
 {
     public static Uuid Empty { get; } = new Uuid();

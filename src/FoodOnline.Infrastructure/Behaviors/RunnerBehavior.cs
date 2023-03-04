@@ -2,11 +2,10 @@
 
 namespace FoodOnline.Infrastructure.Behaviors;
 
-public sealed class ExceptionBehavior<TMessage, TResponse> : IPipelineBehavior<TMessage, TResponse>
+public sealed class RunnerBehavior<TMessage, TResponse> : IPipelineBehavior<TMessage, TResponse>
     where TMessage : IMessage
-    where TResponse : IResult
 {
-    private static readonly Type Err = typeof(Result<>.Err);
+    private static readonly Type ErType = typeof(Result<>.Er);
 
     public async ValueTask<TResponse> Handle(TMessage message, CancellationToken cancellationToken, MessageHandlerDelegate<TMessage, TResponse> next)
     {
@@ -16,18 +15,16 @@ public sealed class ExceptionBehavior<TMessage, TResponse> : IPipelineBehavior<T
         }
         catch (Exception ex)
         {
-            var err = NewErr(ex);
-
-            Log.Error(ex, "{Error}", err);
-
-            return err;
+            Log.Error(ex, "RQST {RequestName}", message.GetType().Name);
+            return NewErr(ex);
         }
     }
 
     private static TResponse NewErr(Exception ex)
     {
         var type = typeof(TResponse).GetGenericArguments()[0];
-        var err = Err.MakeGenericType(type);
-        return (TResponse)Activator.CreateInstance(err, new[] { ex })!;
+        var erType = ErType.MakeGenericType(type);
+
+        return (TResponse)Activator.CreateInstance(erType, ex)!;
     }
 }
