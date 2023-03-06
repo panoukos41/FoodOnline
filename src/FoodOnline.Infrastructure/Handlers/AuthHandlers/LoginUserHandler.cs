@@ -1,10 +1,5 @@
 ﻿using FoodOnline.Infrastructure.Abstractions.Handlers;
 using FoodOnline.Requests.AuthRequests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FoodOnline.Infrastructure.Handlers.AuthHandlers;
 

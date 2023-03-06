@@ -7,4 +7,3 @@
 public abstract record Query<T> : IQuery<Result<T>> where T : notnull
 {
 }
-
