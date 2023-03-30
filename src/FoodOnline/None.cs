@@ -1,13 +1,11 @@
 ﻿namespace FoodOnline;
 
-// Unit code from: https://github.com/jbogard/MediatR/blob/master/src/MediatR/Unit.cs
+// Unit code from: https://github.com/jbogard/MediatR/blob/master/src/MediatR.Contracts/Unit.cs
 
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-
-#pragma warning disable IDE0060 // Remove unused parameter
 
 /// <summary>
 /// Represents a void type, since <see cref="void"/> is not a valid return type in C#.
