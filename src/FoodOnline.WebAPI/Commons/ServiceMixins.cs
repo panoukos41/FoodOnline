@@ -1,7 +1,7 @@
 ﻿using FoodOnline.Abstractions;
 using System.Reflection;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace FoodOnline.Commons;
 
 public static class ServiceMixins
 {
@@ -10,7 +10,7 @@ public static class ServiceMixins
     {
         TModule.Configure(builder);
     }
-    
+
     public static void UseWebModule<TModule>(this WebApplication app)
         where TModule : IWebModule
     {

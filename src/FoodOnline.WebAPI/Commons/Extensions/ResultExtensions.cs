@@ -1,6 +1,6 @@
 using FoodOnline;
 
-namespace Microsoft.AspNetCore.Http;
+namespace FoodOnline.Commons.Extensions;
 
 public static class ResultExtensions
 {
