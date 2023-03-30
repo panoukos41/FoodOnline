@@ -9,6 +9,31 @@ public abstract class CommandHandler<TCommand, T> :
     public abstract ValueTask<Result<T>> Handle(TCommand command, CancellationToken cancellationToken);
 }
 
+public abstract class InsertCommandHandler<TCommand, TEntity> :
+    AbstractHandler,
+    ICommandHandler<TCommand, Result<Uuid>>
+    where TCommand : InsertCommand<TEntity>
+    where TEntity : IEntity
+{
+    public ValueTask<Result<Uuid>> Handle(TCommand command, CancellationToken cancellationToken)
+    {
+        return new(Er.Empty);
+    }
+}
+
+
+public abstract class UpdateCommandHandler<TCommand, TEntity> :
+    AbstractHandler,
+    ICommandHandler<TCommand, Result<None>>
+    where TCommand : UpdateCommand<TEntity>
+    where TEntity : IEntity
+{
+    public ValueTask<Result<None>> Handle(TCommand command, CancellationToken cancellationToken)
+    {
+        return new(Er.Empty);
+    }
+}
+
 //public abstract class SetCommandHandler<TCommand, T> :
 //    CommandHandler<TCommand, T>
 //    where TCommand : SetCommand<T>
