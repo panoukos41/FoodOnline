@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "WebAPI": {
+      "commandName": "Project",
+      "workingDirectory": ".",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

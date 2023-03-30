@@ -1,14 +1,13 @@
-﻿using FoodOnline.Abstractions;
+﻿using FoodOnline.Abstractions.Models;
 using FoodOnline.Abstractions.Requests;
-using FoodOnline.Models;
 using MongoDB.Driver;
 
-namespace FoodOnline.Infrastructure.Abstractions.Handlers;
+namespace FoodOnline.Abstractions.Handlers;
 
 public abstract class CommandHandler<TCommand, T> :
     AbstractHandler,
     ICommandHandler<TCommand, Result<T>>
-    where TCommand : FoodOnline.Abstractions.Requests.Command<T>
+    where TCommand : Requests.Command<T>
     where T : notnull
 {
     public abstract ValueTask<Result<T>> Handle(TCommand command, CancellationToken cancellationToken);
@@ -17,14 +16,14 @@ public abstract class CommandHandler<TCommand, T> :
 public abstract class SetCommandHandler<TCommand, T> :
     CommandHandler<TCommand, T>
     where TCommand : SetCommand<T>
-    where T : notnull, IModel
+    where T : notnull, IEntity
 {
     public override async ValueTask<Result<T>> Handle(TCommand command, CancellationToken cancellationToken)
     {
         var client = new MongoClient("mongodb://admin:password@localhost:3306");
         var db = client.GetDatabase("test");
 
-        var model = command.Model;
+        var model = command.Entity;
         var collection = db.GetCollection<T>(Collection);
 
         await collection.InsertOneAsync(model, null, cancellationToken);
@@ -34,10 +33,10 @@ public abstract class SetCommandHandler<TCommand, T> :
 }
 
 public abstract class DeleteCommandHandler<TCommand> :
-    CommandHandler<TCommand, Unit>
+    CommandHandler<TCommand, None>
     where TCommand : DeleteCommand
 {
-    public override async ValueTask<Result<Unit>> Handle(TCommand command, CancellationToken cancellationToken)
+    public override async ValueTask<Result<None>> Handle(TCommand command, CancellationToken cancellationToken)
     {
         var client = new MongoClient("mongodb://admin:password@localhost:3306");
         var db = client.GetDatabase("test");
@@ -47,6 +46,6 @@ public abstract class DeleteCommandHandler<TCommand> :
 
         await collection.DeleteOneAsync(m => m.Id == id, null, cancellationToken);
 
-        return Unit.Value;
+        return None.Value;
     }
 }

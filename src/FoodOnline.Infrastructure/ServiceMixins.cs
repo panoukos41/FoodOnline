@@ -1,32 +1,41 @@
 ﻿global using Mediator;
-using FoodOnline.Infrastructure;
-using FoodOnline.Infrastructure.Behaviors;
-using FoodOnline.Infrastructure.Serializesrs.Bson;
+using FoodOnline;
+using FoodOnline.Abstractions;
+using FoodOnline.Abstractions.Behaviors;
+using FoodOnline.Authentications.BsonSerializesrs;
+using FoodOnline.Commons.BsonSerializesrs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceMixins
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructureModule<TModule>(this IServiceCollection services, IConfiguration configuration)
+        where TModule : IInfrastructureModule
     {
-        services.AddMediator(static o => o.ServiceLifetime = ServiceLifetime.Singleton);
-
-        services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(LogBehavior<,>));
-        services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(RunnerBehavior<,>));
-        services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-
-        UuidBsonSerializer.TryRegister();
-        RoleBsonSerializer.TryRegister();
-
-        return services;
+        TModule.Configure(services, configuration);
     }
 
-    public static IHost UseInfrastructureServiceProvider(this IHost app)
+    public static void AddAllInfrastructureModules(this IServiceCollection services, IConfiguration configuration)
     {
-        Services.Initialize(app.Services);
+        var args = new object[] { services, configuration };
 
-        return app;
+        //var moduleType = typeof(IInfrastructureModule);
+        //var methodType = moduleType.GetMethod(nameof(IInfrastructureModule.Configure), BindingFlags.Public | BindingFlags.Static);
+
+
+        var types = AppDomain.CurrentDomain
+            .GetAssemblies()
+            .SelectMany(static assembly => assembly.DefinedTypes)
+            .Where(static t => t.GetInterface(nameof(IInfrastructureModule)) is { })
+            .ToList();
+
+        //foreach (var type in types)
+        //{
+        //    var method = type.GetMethod(nameof(IInfrastructureModule.Configure), BindingFlags.Public | BindingFlags.Static);
+        //    method?.Invoke(null, args);
+        //}
     }
 }

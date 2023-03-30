@@ -1,6 +1,6 @@
 ﻿using FoodOnline.Abstractions.Requests;
 
-namespace FoodOnline.Infrastructure.Abstractions.Handlers;
+namespace FoodOnline.Abstractions.Handlers;
 
 public abstract class QueryHandler<TQuery, T> :
     AbstractHandler,

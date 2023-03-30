@@ -1,6 +1,4 @@
 ﻿using FluentValidation;
-using FoodOnline.Models;
-using FoodOnline.Validation;
 
 namespace FoodOnline.Abstractions.Requests;
 
@@ -14,30 +12,30 @@ public abstract record Command<T> : ICommand<Result<T>> where T : notnull
 
 /// <summary>
 /// Represents a POST request like <see cref="Command{T}"/> but
-/// also requires an <see cref="IModel"/> to send and provides validation.
+/// also requires an <see cref="IEntity"/> to send and provides validation.
 /// </summary>
 /// <typeparam name="T">The type of the result object.</typeparam>
-public abstract record SetCommand<TModel> : Command<TModel>, IValid where TModel : notnull, IModel
+public abstract record SetCommand<TEntity> : Command<TEntity>, IValid where TEntity : notnull, IEntity
 {
-    public TModel Model { get; }
+    public TEntity Entity { get; }
 
-    protected SetCommand(TModel model)
+    protected SetCommand(TEntity entity)
     {
-        Model = model;
+        Entity = entity;
     }
 
-    public static IValidator Validator { get; } = new InlineValidator<SetCommand<TModel>>
+    public static IValidator Validator { get; } = new InlineValidator<SetCommand<TEntity>>
     {
-        static v => v.RuleFor(x => x.Model).SetValidator((IValidator<TModel>)TModel.Validator)
+        static v => v.RuleFor(x => x.Entity).SetValidator((IValidator<TEntity>)TEntity.Validator)
     };
 }
 
 /// <summary>
-/// Represents a DELETE request for an <see cref="IModel"/>.
+/// Represents a DELETE request for an <see cref="IEntity"/>.
 /// It also requires a <see cref="Uuid"/> to send and provides validation.
 /// </summary>
 /// <typeparam name="T">The type of the result object.</typeparam>
-public abstract record DeleteCommand : Command<Unit>, IValid
+public abstract record DeleteCommand : Command<None>, IValid
 {
     public Uuid Id { get; }
 
@@ -46,7 +44,7 @@ public abstract record DeleteCommand : Command<Unit>, IValid
         Id = id;
     }
 
-    protected DeleteCommand(IModel model)
+    protected DeleteCommand(IEntity model)
     {
         Id = model.Id;
     }

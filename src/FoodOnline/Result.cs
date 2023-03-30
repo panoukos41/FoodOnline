@@ -26,8 +26,7 @@ public sealed record Er
     }
 }
 
-[Union]
-[JsonConverter(typeof(ResultJsonConverter))]
+[Union, JsonConverter(typeof(ResultJsonConverter))]
 public abstract partial record Result<T> where T : notnull
 {
     public static implicit operator Result<T>(T Value) => new Ok(Value);

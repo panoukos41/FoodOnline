@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FoodOnline.Infrastructure;
+namespace FoodOnline;
 
 public static class Services
 {

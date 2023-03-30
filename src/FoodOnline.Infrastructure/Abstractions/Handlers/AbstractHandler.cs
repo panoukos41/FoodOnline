@@ -1,4 +1,4 @@
-﻿namespace FoodOnline.Infrastructure.Abstractions.Handlers;
+﻿namespace FoodOnline.Abstractions.Handlers;
 
 public abstract class AbstractHandler
 {
