@@ -13,6 +13,5 @@ public sealed class AuthenticationsModule : IInfrastructureModule
 {
     public static void Configure(IServiceCollection services, IConfiguration configuration)
     {
-        throw new NotImplementedException();
     }
 }

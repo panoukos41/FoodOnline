@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FoodOnline.Abstractions;
+﻿namespace FoodOnline.Abstractions;
 
 public interface IWebModule
 {
+    abstract static void Configure(WebApplicationBuilder builder);
+
+    abstract static void Use(WebApplication app);
 }

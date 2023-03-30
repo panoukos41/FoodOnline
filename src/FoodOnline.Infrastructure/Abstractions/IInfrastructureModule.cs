@@ -5,5 +5,5 @@ namespace FoodOnline.Abstractions;
 
 public interface IInfrastructureModule
 {
-    public abstract static void Configure(IServiceCollection services, IConfiguration configuration);
+    abstract static void Configure(IServiceCollection services, IConfiguration configuration);
 }
