@@ -3,6 +3,8 @@
 // Unit code from: https://github.com/jbogard/MediatR/blob/master/src/MediatR/Unit.cs
 
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 #pragma warning disable IDE0060 // Remove unused parameter
@@ -10,6 +12,7 @@ using System.Threading.Tasks;
 /// <summary>
 /// Represents a void type, since <see cref="void"/> is not a valid return type in C#.
 /// </summary>
+[JsonConverter(typeof(NoneJsonConverter))]
 public readonly struct None : IEquatable<None>, IComparable<None>, IComparable
 {
     /// <summary>
@@ -112,4 +115,18 @@ public readonly struct None : IEquatable<None>, IComparable<None>, IComparable
 
     /// <inheritdoc/>
     public static bool operator >=(None left, None right) => true;
+
+    private sealed class NoneJsonConverter : JsonConverter<None>
+    {
+        public override None Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            return Value;
+        }
+
+        public override void Write(Utf8JsonWriter writer, None value, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+            writer.WriteEndObject();
+        }
+    }
 }
