@@ -24,6 +24,13 @@ public sealed record Er
     {
         return Error.GetHashCode();
     }
+
+    public static Er Empty { get; } = new()
+    {
+        Error = string.Empty,
+        Reason = string.Empty,
+        Metadata = null,
+    };
 }
 
 [Union, JsonConverter(typeof(ResultJsonConverter))]
