@@ -3,28 +3,53 @@
 namespace FoodOnline.Abstractions.Requests;
 
 /// <summary>
-/// Represents a POST request.
+/// Represents a base command.
 /// </summary>
 /// <typeparam name="T">The type of the result object.</typeparam>
-public abstract record Command<T> : ICommand<Result<T>> where T : notnull
+public abstract record Command<T> : ICommand<Result<T>>
+    where T : notnull
 {
 }
 
 /// <summary>
-/// Represents a POST request like <see cref="Command{T}"/> but
-/// also requires an <see cref="IEntity"/> to send and provides validation.
+/// Represents a POST request that will Insert
+/// a new <see cref="IEntity"/> that must be valid.
+/// The returned value is the <see cref="Uuid"/>
+/// the inserted entity got.
 /// </summary>
-/// <typeparam name="T">The type of the result object.</typeparam>
-public abstract record SetCommand<TEntity> : Command<TEntity>, IValid where TEntity : notnull, IEntity
+/// <typeparam name="TEntity">The type of the entity to insert.</typeparam>
+public abstract record InsertCommand<TEntity> : Command<Uuid>, IValid
+    where TEntity : notnull, IEntity
 {
     public TEntity Entity { get; }
 
-    protected SetCommand(TEntity entity)
+    protected InsertCommand(TEntity entity)
     {
         Entity = entity;
     }
 
-    public static IValidator Validator { get; } = new InlineValidator<SetCommand<TEntity>>
+    public static IValidator Validator { get; } = new InlineValidator<InsertCommand<TEntity>>
+    {
+        static v => v.RuleFor(x => x.Entity).SetValidator((IValidator<TEntity>)TEntity.Validator)
+    };
+}
+
+/// <summary>
+/// Represents a PUT request that will Update
+/// an existing <see cref="IEntity"/> that must be valid.
+/// </summary>
+/// <typeparam name="TEntity">The type of the entity to update.</typeparam>
+public abstract record UpdateCommand<TEntity> : Command<None>, IValid
+    where TEntity : notnull, IEntity
+{
+    public TEntity Entity { get; }
+
+    protected UpdateCommand(TEntity entity)
+    {
+        Entity = entity;
+    }
+
+    public static IValidator Validator { get; } = new InlineValidator<UpdateCommand<TEntity>>
     {
         static v => v.RuleFor(x => x.Entity).SetValidator((IValidator<TEntity>)TEntity.Validator)
     };
