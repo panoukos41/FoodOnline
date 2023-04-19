@@ -1,5 +1,4 @@
 ﻿using Dunet;
-using MongoDB.Bson.Serialization.Attributes;
 using System.Text.Json.Serialization;
 
 namespace FoodOnline.Authentications;
@@ -8,8 +7,6 @@ namespace FoodOnline.Authentications;
 [JsonDerivedType(typeof(Default), typeDiscriminator: nameof(Default))]
 [JsonDerivedType(typeof(GitHub), typeDiscriminator: nameof(GitHub))]
 [JsonDerivedType(typeof(Facebook), typeDiscriminator: nameof(Facebook))]
-
-[BsonScalarDsicriminator<AuthType>("$auth")]
 
 [Union]
 public partial record AuthType
