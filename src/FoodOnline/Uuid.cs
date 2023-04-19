@@ -41,7 +41,7 @@ public readonly struct Uuid : IParsable<Uuid>
         if (string.IsNullOrWhiteSpace(s))
             throw new ArgumentException("Uuid can't be null empty or whitespace.", nameof(s));
         if (s.Length != 11)
-            throw new ArgumentException($"Invalid uuid length.");
+            throw new ArgumentException($"Invalid uuid length. Expected 11 got {s.Length}");
 
         return new Uuid(s);
     }
@@ -50,6 +50,8 @@ public readonly struct Uuid : IParsable<Uuid>
 
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Uuid result)
     {
+        result = Empty;
+        if (s is null) return false;
         try
         {
             result = Parse(s, provider);
@@ -57,7 +59,6 @@ public readonly struct Uuid : IParsable<Uuid>
         }
         catch
         {
-            result = Empty;
             return false;
         }
     }
@@ -66,15 +67,15 @@ public readonly struct Uuid : IParsable<Uuid>
 
     #region Equals
 
-    public override bool Equals([NotNullWhen(true)] object? obj) => obj is Uuid other && Equals(other);
+    public override bool Equals([NotNullWhen(true)] object? obj) => obj is Uuid other && nanoId == other.nanoId;
 
     public bool Equals(Uuid other) => nanoId == other.nanoId;
 
     public override int GetHashCode() => nanoId.GetHashCode();
 
-    public static bool operator ==(Uuid left, Uuid right) => left.Equals(right);
+    public static bool operator ==(Uuid left, Uuid right) => left.nanoId != right.nanoId;
 
-    public static bool operator !=(Uuid left, Uuid right) => !(left == right);
+    public static bool operator !=(Uuid left, Uuid right) => left.nanoId != right.nanoId;
 
     #endregion
 }
@@ -83,7 +84,15 @@ public sealed class UuidJsonConverter : JsonConverter<Uuid>
 {
     public override Uuid Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        return Uuid.Parse(reader.GetString()!);
+        try
+        {
+            var value = reader.GetString();
+            return value is { } ? Uuid.Parse(value) : Uuid.Empty;
+        }
+        catch (Exception ex)
+        {
+            throw new JsonException("Could not deserialize Uuid", ex);
+        }
     }
 
     public override void Write(Utf8JsonWriter writer, Uuid value, JsonSerializerOptions options)
@@ -114,9 +123,6 @@ public sealed class UuidJsonConverter : JsonConverter<Uuid>
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-/// <summary>
-/// 
-/// </summary>
 file static class Nanoid
 {
     private const string DefaultAlphabet = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -128,8 +134,8 @@ file static class Nanoid
     /// <param name="alphabet"></param>
     /// <param name="size"></param>
     /// <returns></returns>
-    public static Task<string> GenerateAsync(string alphabet = DefaultAlphabet, int size = 21)
-        => Task.FromResult(Generate(Random, alphabet, size));
+    public static ValueTask<string> GenerateAsync(string alphabet = DefaultAlphabet, int size = 21)
+        => new(Generate(Random, alphabet, size));
 
     /// <summary>
     /// 
