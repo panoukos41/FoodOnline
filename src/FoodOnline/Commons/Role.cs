@@ -1,22 +1,27 @@
-﻿using Ardalis.SmartEnum;
-using Ardalis.SmartEnum.SystemTextJson;
-using System.Runtime.CompilerServices;
+﻿using Dunet;
 using System.Text.Json.Serialization;
 
 namespace FoodOnline.Commons;
 
-[JsonConverter(typeof(SmartEnumNameConverter<Role, string>))]
-public sealed class Role : SmartEnum<Role, string>
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "$auth")]
+[JsonDerivedType(typeof(Admin), typeDiscriminator: nameof(Admin))]
+[JsonDerivedType(typeof(User), typeDiscriminator: nameof(User))]
+[JsonDerivedType(typeof(Manager), typeDiscriminator: nameof(Manager))]
+[JsonDerivedType(typeof(Employee), typeDiscriminator: nameof(Employee))]
+
+[Union]
+public partial record Role
 {
-    public static readonly Role Admin = new();
+    public partial record Admin;
 
-    public static readonly Role User = new();
+    public partial record User;
 
-    public static readonly Role Manager = new();
+    public partial record Manager;
 
-    public static readonly Role Employee = new();
+    public partial record Employee;
 
-    private Role([CallerMemberName] string name = default!) : base(name, name)
+    public sealed override string ToString()
     {
+        return GetType().Name;
     }
 }
