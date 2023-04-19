@@ -1,5 +1,4 @@
-﻿using FoodOnline.Authentications;
-using MongoDB.Bson.Serialization;
+﻿using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 
@@ -13,9 +12,14 @@ public class AuthTypeSerializer : SerializerBase<AuthType>
     {
         if (registered) return false;
 
-        BsonSerializer.RegisterDiscriminatorConvention(typeof(AuthType), new ScalarDiscriminatorConvention("$type"));
+        BsonSerializer.RegisterDiscriminatorConvention(typeof(AuthType), new ScalarDiscriminatorConvention("$auth"));
 
         return registered = true;
+    }
+
+    public AuthTypeSerializer()
+    {
+        TryRegister();
     }
 
     public override AuthType Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)

@@ -9,6 +9,7 @@
     <PackageReference Include="Mediator.SourceGenerator" Version="2.1.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.19.1" />
     <PackageReference Include="Morris.Moxy" Version="1.2.0" PrivateAssets="all" />
     <PackageReference Include="Serilog" Version="2.12.0" />

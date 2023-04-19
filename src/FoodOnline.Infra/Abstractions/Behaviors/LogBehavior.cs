@@ -1,7 +1,4 @@
-﻿using FoodOnline.Abstractions.Requests;
-using Serilog;
-
-namespace FoodOnline.Abstractions.Behaviors;
+﻿namespace FoodOnline.Abstractions.Behaviors;
 
 public sealed class LogBehavior<TMessage, TResponse> : IPipelineBehavior<TMessage, TResponse>
     where TMessage : IMessage

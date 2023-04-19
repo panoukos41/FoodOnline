@@ -1,6 +1,4 @@
-﻿using Serilog;
-
-namespace FoodOnline.Abstractions.Behaviors;
+﻿namespace FoodOnline.Abstractions.Behaviors;
 
 public sealed class RunnerBehavior<TMessage, TResponse> : IPipelineBehavior<TMessage, TResponse>
     where TMessage : IMessage

@@ -1,17 +1,18 @@
 ﻿using FoodOnline.Abstractions;
+using FoodOnline.Authentications.BsonSerializesrs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FoodOnline.Authentications;
 
-public sealed class AuthenticationsModule : IInfrastructureModule
+public sealed class AuthenticationsModule : IInfraModule
 {
+    public static bool Configured { get; private set; }
+
     public static void Configure(IServiceCollection services, IConfiguration configuration)
     {
+        Configured = true;
+
+        AuthTypeSerializer.TryRegister();
     }
 }
