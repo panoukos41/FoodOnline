@@ -1,9 +1,9 @@
 ﻿using Dunet;
 using System.Text.Json.Serialization;
 
-namespace FoodOnline.Commons;
+namespace FoodOnline.Users;
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "$auth")]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "$role")]
 [JsonDerivedType(typeof(Admin), typeDiscriminator: nameof(Admin))]
 [JsonDerivedType(typeof(User), typeDiscriminator: nameof(User))]
 [JsonDerivedType(typeof(Manager), typeDiscriminator: nameof(Manager))]
