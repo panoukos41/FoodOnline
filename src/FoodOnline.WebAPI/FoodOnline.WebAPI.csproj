@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FoodOnline.Infrastructure\FoodOnline.Infrastructure.csproj" />
+    <ProjectReference Include="..\FoodOnline.Infra\FoodOnline.Infra.csproj" />
   </ItemGroup>
 
 </Project>

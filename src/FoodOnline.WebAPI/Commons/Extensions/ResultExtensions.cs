@@ -1,5 +1,3 @@
-using FoodOnline;
-
 namespace FoodOnline.Commons.Extensions;
 
 public static class ResultExtensions

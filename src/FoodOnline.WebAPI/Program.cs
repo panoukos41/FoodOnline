@@ -4,24 +4,30 @@ var services = builder.Services;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    //.WriteTo.File($"{Environment.CurrentDirectory}/Logs/logs.txt")
 #if DEBUG
     .MinimumLevel.Debug()
 #else
+    .WriteTo.File($"{Environment.CurrentDirectory}/Logs/logs.txt")
     .MinimumLevel.Information()
 #endif
     .CreateLogger();
 
-builder.Host.UseSerilog();
+services.ConfigureInfraModules(configuration);
 
-services.AddInfrastructureModules(configuration);
-builder.AddWebModules();
+builder.Host.UseSerilog();
+builder.ConfigureWebModules();
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
+
+// Add auth stuff before everything else.
+app.UseWebModule<WebApiModule>();
+
+// Use serilog for http requests.
 app.UseSerilogRequestLogging();
 
-app.UseAllWebModules();
+// Configure the rest of web modules.
+app.UseWebModules();
 
 await app.RunAsync();
