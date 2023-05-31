@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -6,6 +7,7 @@ using System.Text.Json.Serialization;
 namespace FoodOnline;
 
 [JsonConverter(typeof(UuidJsonConverter))]
+[DebuggerDisplay("{nanoId}")]
 public readonly struct Uuid : IParsable<Uuid>
 {
     public static Uuid Empty { get; } = new Uuid();
@@ -46,7 +48,7 @@ public readonly struct Uuid : IParsable<Uuid>
         return new Uuid(s);
     }
 
-    public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Uuid result) => TryParse(s, out result);
+    public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Uuid result) => TryParse(s, null, out result);
 
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Uuid result)
     {
@@ -84,15 +86,7 @@ public sealed class UuidJsonConverter : JsonConverter<Uuid>
 {
     public override Uuid Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        try
-        {
-            var value = reader.GetString();
-            return value is { } ? Uuid.Parse(value) : Uuid.Empty;
-        }
-        catch (Exception ex)
-        {
-            throw new JsonException("Could not deserialize Uuid", ex);
-        }
+        return Uuid.TryParse(reader.GetString(), out var uuid) ? uuid : Uuid.Empty;
     }
 
     public override void Write(Utf8JsonWriter writer, Uuid value, JsonSerializerOptions options)

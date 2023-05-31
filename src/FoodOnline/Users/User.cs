@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FoodOnline.Abstractions;
 
 namespace FoodOnline.Users;
 
@@ -19,6 +20,14 @@ public sealed record User : IEntity
     public HashSet<Uuid> Favorites { get; set; } = new();
 
     public static IValidator Validator { get; } = new UserValidator();
+
+    //public static User Anonymous { get; } = new()
+    //{
+    //    Id = Uuid.Empty,
+    //    Username = "Anonymous",
+    //    Email = string.Empty,
+    //    Role = new Role.User()
+    //};
 }
 
 public sealed class UserValidator : AbstractValidator<User>

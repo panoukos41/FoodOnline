@@ -1,6 +1,8 @@
-﻿//namespace FoodOnline.Orders.Requests;
+﻿namespace FoodOnline.Orders.Requests;
 
-//public class GetOrder : IRequest<OrderModel>
-//{
-//    public string OrderId { get; set; }
-//}
+public sealed record GetOrder : GetQuery<Order>
+{
+    public GetOrder(Uuid id) : base(id)
+    {
+    }
+}

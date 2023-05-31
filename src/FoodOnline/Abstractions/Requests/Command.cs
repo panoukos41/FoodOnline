@@ -18,24 +18,24 @@ public abstract record Command<T> : ICommand<Result<T>>
 /// the inserted entity got.
 /// </summary>
 /// <typeparam name="TEntity">The type of the entity to insert.</typeparam>
-public abstract record InsertCommand<TEntity> : Command<Uuid>, IValid
+public abstract record CreateCommand<TEntity> : Command<Uuid>, IValid
     where TEntity : notnull, IEntity
 {
     public TEntity Entity { get; }
 
-    protected InsertCommand(TEntity entity)
+    protected CreateCommand(TEntity entity)
     {
         Entity = entity;
     }
 
-    public static IValidator Validator { get; } = new InlineValidator<InsertCommand<TEntity>>
+    public static IValidator Validator { get; } = new InlineValidator<CreateCommand<TEntity>>
     {
         static v => v.RuleFor(x => x.Entity).SetValidator((IValidator<TEntity>)TEntity.Validator)
     };
 }
 
 /// <summary>
-/// Represents a PUT request that will Update
+/// Represents a PUT request that will Update/Overwrite
 /// an existing <see cref="IEntity"/> that must be valid.
 /// </summary>
 /// <typeparam name="TEntity">The type of the entity to update.</typeparam>
@@ -52,6 +52,27 @@ public abstract record UpdateCommand<TEntity> : Command<None>, IValid
     public static IValidator Validator { get; } = new InlineValidator<UpdateCommand<TEntity>>
     {
         static v => v.RuleFor(x => x.Entity).SetValidator((IValidator<TEntity>)TEntity.Validator)
+    };
+}
+
+/// <summary>
+/// Represents a PATCH request that will Update
+/// a Value in an existing <see cref="IEntity"/> that must be valid.
+/// </summary>
+/// <typeparam name="TEntity">The type of the entity to update.</typeparam>
+public abstract record PatchCommand<TEntity> : Command<None>, IValid
+    where TEntity : notnull, IEntity
+{
+    public Uuid Id { get; }
+
+    protected PatchCommand(Uuid id)
+    {
+        Id = id;
+    }
+
+    public static IValidator Validator { get; } = new InlineValidator<PatchCommand<TEntity>>
+    {
+        static v => v.RuleFor(x => x.Id).NotEmpty(),
     };
 }
 

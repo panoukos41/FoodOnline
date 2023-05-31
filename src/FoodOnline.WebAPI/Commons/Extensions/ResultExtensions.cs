@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+
 namespace FoodOnline.Commons.Extensions;
 
 public static class ResultExtensions
@@ -7,7 +9,9 @@ public static class ResultExtensions
     /// </summary>
     public static ValueTask<IResult> Ok<T>(this ValueTask<Result<T>> result)
         where T : notnull
-        => result.MatchAsync(Results.Ok, Error);
+    {
+        return result.MatchAsync(ok => Results.Ok(ok.Value), Error);
+    }
 
     /// <summary>
     /// Produces a <see cref="StatusCodes.Status201Created"/> response.
@@ -34,7 +38,7 @@ public static class ResultExtensions
 
     private static IResult Error<T>(Result<T>.Er er)
         where T : notnull
-        => Results.BadRequest(er);
+        => TypedResults.BadRequest((Er)er);
 
     ///// <summary>
     ///// Produces a <see cref="StatusCodes.Status400BadRequest"/> response.

@@ -11,12 +11,8 @@ using System.Threading.Tasks;
 /// Represents a void type, since <see cref="void"/> is not a valid return type in C#.
 /// </summary>
 [JsonConverter(typeof(NoneJsonConverter))]
-public sealed class None : IEquatable<None>, IComparable<None>, IComparable
+public readonly struct None : IEquatable<None>, IComparable<None>, IComparable
 {
-    private None()
-    {
-    }
-
     /// <summary>
     /// Default and only value of the <see cref="None"/> type.
     /// </summary>
@@ -33,6 +29,24 @@ public sealed class None : IEquatable<None>, IComparable<None>, IComparable
     public static readonly ValueTask<None> ValueTask = new(Value);
 
     /// <summary>
+    /// Determines whether the current object is equal to another object of the same type.
+    /// </summary>
+    /// <param name="other">An object to compare with this object.</param>
+    /// <returns>
+    /// <c>true</c> if the current object is equal to the <paramref name="other" /> parameter; otherwise, <c>false</c>.
+    /// </returns>
+    public bool Equals(None other) => true;
+
+    /// <summary>
+    /// Determines whether the specified <see cref="object" /> is equal to this instance.
+    /// </summary>
+    /// <param name="obj">The object to compare with the current instance.</param>
+    /// <returns>
+    /// <c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.
+    /// </returns>
+    public override bool Equals(object? obj) => obj is None;
+
+    /// <summary>
     /// Compares the current object with another object of the same type.
     /// </summary>
     /// <param name="other">An object to compare with this object.</param>
@@ -43,7 +57,7 @@ public sealed class None : IEquatable<None>, IComparable<None>, IComparable
     ///  - Zero: This object is equal to <paramref name="other" />.
     ///  - Greater than zero: This object is greater than <paramref name="other" />.
     /// </returns>
-    public int CompareTo(None? other) => 0;
+    public int CompareTo(None other) => 0;
 
     /// <summary>
     /// Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
@@ -65,24 +79,6 @@ public sealed class None : IEquatable<None>, IComparable<None>, IComparable
     /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
     /// </returns>
     public override int GetHashCode() => 0;
-
-    /// <summary>
-    /// Determines whether the current object is equal to another object of the same type.
-    /// </summary>
-    /// <param name="other">An object to compare with this object.</param>
-    /// <returns>
-    /// <c>true</c> if the current object is equal to the <paramref name="other" /> parameter; otherwise, <c>false</c>.
-    /// </returns>
-    public bool Equals(None? other) => true;
-
-    /// <summary>
-    /// Determines whether the specified <see cref="object" /> is equal to this instance.
-    /// </summary>
-    /// <param name="obj">The object to compare with the current instance.</param>
-    /// <returns>
-    /// <c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.
-    /// </returns>
-    public override bool Equals(object? obj) => obj is None;
 
     /// <summary>
     /// Determines whether the <paramref name="first"/> object is equal to the <paramref name="second"/> object.
@@ -125,7 +121,7 @@ public sealed class None : IEquatable<None>, IComparable<None>, IComparable
             return Value;
         }
 
-        public override void Write(Utf8JsonWriter writer, None? value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, None value, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
             writer.WriteEndObject();

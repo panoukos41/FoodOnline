@@ -12,22 +12,15 @@ Log.Logger = new LoggerConfiguration()
 #endif
     .CreateLogger();
 
-services.ConfigureInfraModules(configuration);
-
 builder.Host.UseSerilog();
-builder.ConfigureWebModules();
+
+//services.ConfigureInfraModules(configuration);
+//builder.ConfigureWebModules();
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
-
-// Add auth stuff before everything else.
-app.UseWebModule<WebApiModule>();
-
-// Use serilog for http requests.
-app.UseSerilogRequestLogging();
-
-// Configure the rest of web modules.
-app.UseWebModules();
+// Add application specific stuff like:
+// auth, logging swagger.
+//app.UseWebModule<WebApiModule>();
 
 await app.RunAsync();

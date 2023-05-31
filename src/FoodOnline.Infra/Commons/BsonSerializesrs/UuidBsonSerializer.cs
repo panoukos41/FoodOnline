@@ -9,8 +9,7 @@ public sealed class UuidBsonSerializer : SerializerBase<Uuid>
 
     public override Uuid Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
     {
-        var raw = context.Reader.ReadString();
-        return Uuid.Parse(raw);
+        return Uuid.TryParse(context.Reader.ReadString(), out var uuid) ? uuid : Uuid.Empty;
     }
 
     public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, Uuid value)

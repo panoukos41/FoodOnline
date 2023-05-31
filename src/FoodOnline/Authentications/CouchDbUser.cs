@@ -138,7 +138,7 @@
 //        /// </summary>
 //        [JsonProperty("roles")]
 //        public virtual HashSet<TRole> Roles { get; private set; } = new();
-        
+
 //        /// <summary>
 //        /// Gets the claims a user has.
 //        /// </summary>

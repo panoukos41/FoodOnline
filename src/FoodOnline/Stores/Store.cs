@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FoodOnline.Abstractions;
 
 namespace FoodOnline.Stores;
 

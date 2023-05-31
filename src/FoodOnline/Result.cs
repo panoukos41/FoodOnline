@@ -15,6 +15,18 @@ public sealed record Er
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Dictionary<string, JsonDocument>? Metadata { get; set; }
 
+    public Er()
+    {
+    }
+
+    [SetsRequiredMembers]
+    public Er(string error, string reason, Dictionary<string, JsonDocument>? metadata = null)
+    {
+        Error = error;
+        Reason = reason;
+        Metadata = metadata;
+    }
+
     public bool Equals(Er? other)
     {
         return Error == other?.Error;
@@ -66,6 +78,13 @@ public abstract partial record Result<T> where T : notnull
             Reason = reason;
             Metadata = metadata;
         }
+
+        public static implicit operator FoodOnline.Er(Result<T>.Er er) => new()
+        {
+            Error = er.Error,
+            Reason = er.Reason,
+            Metadata = er.Metadata
+        };
     }
 
     public bool IsOk() => this is Result<T>.Ok;

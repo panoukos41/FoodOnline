@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace FoodOnline.Users;
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "$role")]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "$role", IgnoreUnrecognizedTypeDiscriminators = true)]
 [JsonDerivedType(typeof(Admin), typeDiscriminator: nameof(Admin))]
 [JsonDerivedType(typeof(User), typeDiscriminator: nameof(User))]
 [JsonDerivedType(typeof(Manager), typeDiscriminator: nameof(Manager))]
@@ -14,11 +14,11 @@ public partial record Role
 {
     public partial record Admin;
 
-    public partial record User;
-
     public partial record Manager;
 
     public partial record Employee;
+
+    public partial record User;
 
     public sealed override string ToString()
     {

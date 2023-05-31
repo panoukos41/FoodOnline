@@ -12,7 +12,7 @@ var services = builder.Services;
 
 Log.Logger = new LoggerConfiguration().CreateLogger();
 
-services.ConfigureInfraModules(configuration);
+//services.ConfigureInfraModules(configuration);
 
 //var app = builder.Build();
 
