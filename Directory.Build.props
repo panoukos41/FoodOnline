@@ -1,49 +1,19 @@
 <Project>
   <PropertyGroup>
-    <LangVersion>11</LangVersion>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>preview</LangVersion>
     <Configuration Condition="$(Configuration) == ''">Debug</Configuration>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
     <NoWarn>IDE0130;CA1416;CS1591;</NoWarn>
-
-    <!-- Set output paths -->
-    <SourceDir>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'Directory.Build.props'))</SourceDir>
-    <Artifacts>$(SourceDir)\artifacts\$(MSBuildProjectName)</Artifacts>
-
-    <OutputPath>$(Artifacts)\bin\$(Configuration)</OutputPath>
-    <BaseOutputPath>$(Artifacts)\obj</BaseOutputPath>
-    <BaseIntermediateOutputPath>$(BaseOutputPath)</BaseIntermediateOutputPath>
-    <PackageOutputPath>$(SourceDir)nuget</PackageOutputPath>
   </PropertyGroup>
 
   <PropertyGroup>
     <Owners>panoukos41</Owners>
     <Authors>Panos Athanasiou</Authors>
-    <Copyright>Copyright (c) 202 Panos Athanasiou</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/panoukos41/</PackageProjectUrl>
-    <PackageIconUrl></PackageIconUrl>
-    <DefaultPackageDescription></DefaultPackageDescription>
-    <PackageDescription>$(DefaultPackageDescription)</PackageDescription>
-    <PackageTags></PackageTags>
-    <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
-    <PackageReleaseNotes>$(RepositoryUrl)/releases</PackageReleaseNotes>
-    <RepositoryType>git</RepositoryType>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-
-    <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
-    <!-- <PublishRepositoryUrl>true</PublishRepositoryUrl>  -->
-    <!-- Embed source files that are not tracked by the source control manager in the PDB -->
-    <!-- <EmbedUntrackedSources>true</EmbedUntrackedSources> -->
-    <!-- Include PDB in the built .nupkg -->
-    <!--<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>-->
+    <Copyright>Copyright (c) 2023 Panos Athanasiou</Copyright>
   </PropertyGroup>
-
-  <ItemGroup>
-    <!-- <None Condition="$(ProjectName) == " Include="$(SourceDir)\README.md" Pack="true" PackagePath="\" /> -->
-    <!--<SourceRoot Include="$(MSBuildThisFileDirectory)/" />-->
-  </ItemGroup>
 
   <ItemGroup>
     <!-- <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.255" PrivateAssets="All" /> -->
