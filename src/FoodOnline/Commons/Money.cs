@@ -4,14 +4,14 @@ namespace FoodOnline.Commons;
 
 public readonly record struct Money
 {
-    public static readonly Money Empty = new(Currency.EUR, 0);
-
     public required Currency Currency { get; init; }
 
     public required decimal Value { get; init; }
 
     public Money()
     {
+        Currency = Currency.EUR;
+        Value = 0;
     }
 
     [SetsRequiredMembers]

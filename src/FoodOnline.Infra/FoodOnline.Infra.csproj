@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!--<PackageReference Include="Mediator.SourceGenerator" Version="2.2.0-preview.2" PrivateAssets="all" />-->
+    <PackageReference Include="Mediator.SourceGenerator" Version="2.1.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0-preview.4.23259.5" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0-preview.4.23259.5" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0-preview.4.23259.5" />
@@ -15,10 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FoodOnline\FoodOnline.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
 </Project>
