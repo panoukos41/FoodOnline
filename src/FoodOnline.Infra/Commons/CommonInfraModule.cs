@@ -1,5 +1,5 @@
 ﻿using FoodOnline.Abstractions;
-using FoodOnline.Abstractions.Behaviors;
+using FoodOnline.Commons.Behaviors;
 using FoodOnline.Commons.BsonSerializesrs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,11 +7,11 @@ using MongoDB.Driver;
 
 namespace FoodOnline;
 
-public sealed class InfraModule : IInfraModule
+public sealed class CommonInfraModule : IInfraModule
 {
-    public static void Configure(IServiceCollection services, IConfiguration configuration)
+    public static void Add(IServiceCollection services, IConfiguration configuration)
     {
-        //services.AddMediator(static o => o.ServiceLifetime = ServiceLifetime.Singleton);
+        services.AddMediator(static o => o.ServiceLifetime = ServiceLifetime.Singleton);
 
         services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(LogBehavior<,>));
         services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(RunnerBehavior<,>));

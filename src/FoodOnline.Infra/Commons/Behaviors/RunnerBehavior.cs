@@ -1,4 +1,4 @@
-﻿namespace FoodOnline.Abstractions.Behaviors;
+﻿namespace FoodOnline.Commons.Behaviors;
 
 public sealed class RunnerBehavior<TMessage, TResponse> : IPipelineBehavior<TMessage, TResponse>
     where TMessage : IMessage

@@ -5,27 +5,27 @@ using Mediator;
 
 namespace FoodOnline.Users;
 
+/// <summary>
+/// This already adds <see cref="UsersInfraModule"/>
+/// </summary>
 public sealed class UsersWebModule : IWebModule
 {
-    public static bool Configured { get; private set; }
-
-    public static bool Used { get; private set; }
-
-    public static void Configure(WebApplicationBuilder builder)
+    public static void Add(WebApplicationBuilder builder)
     {
-        Configured = true;
+        var services = builder.Services;
+        var configuration = builder.Configuration;
+
+        services.Add<UsersInfraModule>(configuration);
     }
 
     public static void Use(WebApplication app)
     {
-        Used = true;
-
         var group = app.MapGroup("users");
         group.WithTags("Users");
 
-        group.MapGet("{id}", (string id, ISender sender) =>
+        group.MapGet("{userId}", (string userId, ISender sender) =>
         {
-            return sender.Send(new GetUser(Uuid.Parse(id))).Ok();
+            return sender.Send(new GetUser(Uuid.Parse(userId))).Ok();
         });
 
         group.MapPost("", (CreateUser createUser, ISender sender) =>

@@ -1,20 +1,41 @@
 ﻿using FoodOnline.Abstractions;
+using FoodOnline.Commons.Extensions;
+using FoodOnline.Stores.Requests;
+using Mediator;
 
 namespace FoodOnline.Stores;
 
+/// <summary>
+/// This already adds <see cref="StoresInfraModule"/>
+/// </summary>
 public sealed class StoresWebModule : IWebModule
 {
-    public static bool Configured { get; private set; }
-
-    public static bool Used { get; private set; }
-
-    public static void Configure(WebApplicationBuilder builder)
+    public static void Add(WebApplicationBuilder builder)
     {
-        Configured = true;
+        var services = builder.Services;
+        var configuration = builder.Configuration;
+
+        services.Add<StoresInfraModule>(configuration);
     }
 
     public static void Use(WebApplication app)
     {
-        Used = true;
+        var group = app.MapGroup("stores");
+        group.WithTags("Stores");
+
+        group.MapGet("{storeId}", (string storeId, ISender sender) =>
+        {
+            return sender.Send(new GetStore(Uuid.Parse(storeId))).Ok();
+        });
+
+        group.MapPost("", (CreateStore createStore, ISender sender) =>
+        {
+            return sender.Send(createStore).Ok();
+        });
+
+        group.MapPut("", (UpdateStore updateStore, ISender sender) =>
+        {
+            return sender.Send(updateStore).Ok();
+        });
     }
 }

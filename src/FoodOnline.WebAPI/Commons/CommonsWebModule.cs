@@ -5,11 +5,17 @@ using Microsoft.OpenApi.Models;
 
 namespace FoodOnline.Commons;
 
-public class WebApiModule : IWebModule
+/// <summary>
+/// This already adds <see cref="CommonInfraModule"/>
+/// </summary>
+public class CommonsWebModule : IWebModule
 {
-    public static void Configure(WebApplicationBuilder builder)
+    public static void Add(WebApplicationBuilder builder)
     {
         var services = builder.Services;
+        var configuration = builder.Configuration;
+
+        services.Add<CommonInfraModule>(configuration);
 
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
@@ -28,7 +34,7 @@ public class WebApiModule : IWebModule
             });
         });
 
-        services.AddAuthentication();
+        //services.AddAuthentication();
         //services.AddAuthorization();
     }
 

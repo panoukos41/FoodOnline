@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace FoodOnline.Abstractions.Behaviors;
+namespace FoodOnline.Commons.Behaviors;
 
 public sealed class ValidationBehavior<TMessage, TResponse> : IPipelineBehavior<TMessage, TResponse>
     where TMessage : IMessage, IValid

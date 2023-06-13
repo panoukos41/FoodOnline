@@ -1,5 +1,5 @@
 ﻿using FoodOnline;
-using FoodOnline.Authentications;
+using FoodOnline.Auths;
 using FoodOnline.Orders;
 using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;

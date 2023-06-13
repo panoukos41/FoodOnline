@@ -5,14 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodOnline.Users;
 
-public sealed class UsersModule : IInfraModule
+public sealed class UsersInfraModule : IInfraModule
 {
-    public static bool Configured { get; private set; }
-
-    public static void Configure(IServiceCollection services, IConfiguration configuration)
+    public static void Add(IServiceCollection services, IConfiguration configuration)
     {
-        Configured = true;
-
         RoleBsonSerializer.TryRegister();
     }
 }

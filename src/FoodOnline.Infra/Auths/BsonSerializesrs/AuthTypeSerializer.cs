@@ -2,7 +2,7 @@
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 
-namespace FoodOnline.Authentications.BsonSerializesrs;
+namespace FoodOnline.Auths.BsonSerializesrs;
 
 public class AuthTypeSerializer : SerializerBase<AuthType>
 {

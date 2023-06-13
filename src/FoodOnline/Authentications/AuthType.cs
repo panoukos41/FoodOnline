@@ -1,7 +1,7 @@
 ﻿using Dunet;
 using System.Text.Json.Serialization;
 
-namespace FoodOnline.Authentications;
+namespace FoodOnline.Auths;
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "$auth")]
 [JsonDerivedType(typeof(Default), typeDiscriminator: nameof(Default))]
