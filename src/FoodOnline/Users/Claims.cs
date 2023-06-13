@@ -28,7 +28,7 @@ public sealed class Claims : List<Claim>, IEquatable<Claims>
 
     public override bool Equals(object? obj)
     {
-        return obj is Claims claims && Equals(claims);
+        return Equals(obj as Claims);
     }
 
     public bool Equals(Claims? other)
@@ -36,7 +36,7 @@ public sealed class Claims : List<Claim>, IEquatable<Claims>
         if (other is null) return false;
         if (ReferenceEquals(this, other)) return true;
 
-        return this.SequenceEqual(other);
+        return Count == other.Count && this.SequenceEqual(other);
     }
 }
 
