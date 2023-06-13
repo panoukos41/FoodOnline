@@ -39,7 +39,7 @@ public abstract record CreateCommand<TEntity> : Command<Uuid>, IValid
 /// an existing <see cref="IEntity"/> that must be valid.
 /// </summary>
 /// <typeparam name="TEntity">The type of the entity to update.</typeparam>
-public abstract record UpdateCommand<TEntity> : Command<None>, IValid
+public abstract record UpdateCommand<TEntity> : Command<Void>, IValid
     where TEntity : notnull, IEntity
 {
     public TEntity Entity { get; }
@@ -60,7 +60,7 @@ public abstract record UpdateCommand<TEntity> : Command<None>, IValid
 /// a Value in an existing <see cref="IEntity"/> that must be valid.
 /// </summary>
 /// <typeparam name="TEntity">The type of the entity to update.</typeparam>
-public abstract record PatchCommand<TEntity> : Command<None>, IValid
+public abstract record PatchCommand<TEntity> : Command<Void>, IValid
     where TEntity : notnull, IEntity
 {
     public Uuid Id { get; }
@@ -81,7 +81,7 @@ public abstract record PatchCommand<TEntity> : Command<None>, IValid
 /// It also requires a <see cref="Uuid"/> to send and provides validation.
 /// </summary>
 /// <typeparam name="T">The type of the result object.</typeparam>
-public abstract record DeleteCommand : Command<None>, IValid
+public abstract record DeleteCommand : Command<Void>, IValid
 {
     public Uuid Id { get; }
 

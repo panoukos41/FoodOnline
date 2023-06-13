@@ -25,7 +25,7 @@ public abstract class CreateCommandHandler<TCommand, TEntity> :
         col = mongo.GetCollection<TEntity>(Collection);
     }
 
-    public async ValueTask<Result<Uuid>> Handle(TCommand command, CancellationToken cancellationToken)
+    public virtual async ValueTask<Result<Uuid>> Handle(TCommand command, CancellationToken cancellationToken)
     {
         var entity = command.Entity;
         idProp.SetValue(entity, Uuid.NewUuid());
@@ -40,7 +40,7 @@ public abstract class CreateCommandHandler<TCommand, TEntity> :
 }
 
 public abstract class UpdateCommandHandler<TCommand, TEntity> :
-    ICommandHandler<TCommand, Result<None>>
+    ICommandHandler<TCommand, Result<Void>>
     where TCommand : UpdateCommand<TEntity>
     where TEntity : IEntity
 {
@@ -53,41 +53,22 @@ public abstract class UpdateCommandHandler<TCommand, TEntity> :
         col = mongo.GetCollection<TEntity>(Collection);
     }
 
-    public async ValueTask<Result<None>> Handle(TCommand command, CancellationToken cancellationToken)
+    public virtual async ValueTask<Result<Void>> Handle(TCommand command, CancellationToken cancellationToken)
     {
         var entity = command.Entity;
         var find = Builders<TEntity>.Filter.Eq(x => x.Id, entity.Id);
 
         await col.ReplaceOneAsync(find, command.Entity, cancellationToken: cancellationToken);
 
-        return None.Value;
+        return Void.Value;
     }
 }
 
-//public abstract class SetCommandHandler<TCommand, T> :
-//    CommandHandler<TCommand, T>
-//    where TCommand : SetCommand<T>
-//    where T : notnull, IEntity
-//{
-//    public override async ValueTask<Result<T>> Handle(TCommand command, CancellationToken cancellationToken)
-//    {
-//        var client = new MongoClient("mongodb://admin:password@localhost:3306");
-//        var db = client.GetDatabase("test");
-
-//        var model = command.Entity;
-//        var collection = db.GetCollection<T>(Collection);
-
-//        await collection.InsertOneAsync(model, null, cancellationToken);
-
-//        return model;
-//    }
-//}
-
 //public abstract class DeleteCommandHandler<TCommand> :
-//    CommandHandler<TCommand, None>
+//    CommandHandler<TCommand, Void>
 //    where TCommand : DeleteCommand
 //{
-//    public override async ValueTask<Result<None>> Handle(TCommand command, CancellationToken cancellationToken)
+//    public override async ValueTask<Result<Void>> Handle(TCommand command, CancellationToken cancellationToken)
 //    {
 //        var client = new MongoClient("mongodb://admin:password@localhost:3306");
 //        var db = client.GetDatabase("test");
@@ -97,6 +78,6 @@ public abstract class UpdateCommandHandler<TCommand, TEntity> :
 
 //        await collection.DeleteOneAsync(m => m.Id == id, null, cancellationToken);
 
-//        return None.Value;
+//        return Void.Value;
 //    }
 //}

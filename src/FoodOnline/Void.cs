@@ -10,23 +10,23 @@ using System.Threading.Tasks;
 /// <summary>
 /// Represents a void type, since <see cref="void"/> is not a valid return type in C#.
 /// </summary>
-[JsonConverter(typeof(NoneJsonConverter))]
-public readonly struct None : IEquatable<None>, IComparable<None>, IComparable
+[JsonConverter(typeof(VoidJsonConverter))]
+public sealed class Void : IEquatable<Void>, IComparable<Void>, IComparable
 {
     /// <summary>
-    /// Default and only value of the <see cref="None"/> type.
+    /// Default and only value of the <see cref="Void"/> type.
     /// </summary>
-    public static readonly None Value = new();
+    public static readonly Void Value = new();
 
     /// <summary>
-    /// Task from a <see cref="None"/> type.
+    /// Task from a <see cref="Void"/> type.
     /// </summary>
-    public static readonly Task<None> Task = System.Threading.Tasks.Task.FromResult(Value);
+    public static readonly Task<Void> Task = System.Threading.Tasks.Task.FromResult(Value);
 
     /// <summary>
-    /// Value task with a <see cref="None"/> type.
+    /// Value task with a <see cref="Void"/> type.
     /// </summary>
-    public static readonly ValueTask<None> ValueTask = new(Value);
+    public static readonly ValueTask<Void> ValueTask = new(Value);
 
     /// <summary>
     /// Determines whether the current object is equal to another object of the same type.
@@ -35,7 +35,7 @@ public readonly struct None : IEquatable<None>, IComparable<None>, IComparable
     /// <returns>
     /// <c>true</c> if the current object is equal to the <paramref name="other" /> parameter; otherwise, <c>false</c>.
     /// </returns>
-    public bool Equals(None other) => true;
+    public bool Equals(Void? other) => other is { };
 
     /// <summary>
     /// Determines whether the specified <see cref="object" /> is equal to this instance.
@@ -44,7 +44,7 @@ public readonly struct None : IEquatable<None>, IComparable<None>, IComparable
     /// <returns>
     /// <c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.
     /// </returns>
-    public override bool Equals(object? obj) => obj is None;
+    public override bool Equals(object? obj) => Equals(obj as Void);
 
     /// <summary>
     /// Compares the current object with another object of the same type.
@@ -57,7 +57,7 @@ public readonly struct None : IEquatable<None>, IComparable<None>, IComparable
     ///  - Zero: This object is equal to <paramref name="other" />.
     ///  - Greater than zero: This object is greater than <paramref name="other" />.
     /// </returns>
-    public int CompareTo(None other) => 0;
+    public int CompareTo(Void? other) => 0;
 
     /// <summary>
     /// Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
@@ -86,7 +86,7 @@ public readonly struct None : IEquatable<None>, IComparable<None>, IComparable
     /// <param name="first">The first object.</param>
     /// <param name="second">The second object.</param>
     /// <c>true</c> if the <paramref name="first"/> object is equal to the <paramref name="second" /> object; otherwise, <c>false</c>.
-    public static bool operator ==(None? first, None? second) => true;
+    public static bool operator ==(Void? first, Void? second) => true;
 
     /// <summary>
     /// Determines whether the <paramref name="first"/> object is not equal to the <paramref name="second"/> object.
@@ -94,7 +94,7 @@ public readonly struct None : IEquatable<None>, IComparable<None>, IComparable
     /// <param name="first">The first object.</param>
     /// <param name="second">The second object.</param>
     /// <c>true</c> if the <paramref name="first"/> object is not equal to the <paramref name="second" /> object; otherwise, <c>false</c>.
-    public static bool operator !=(None? first, None? second) => false;
+    public static bool operator !=(Void? first, Void? second) => false;
 
     /// <summary>
     /// Returns a <see cref="string" /> that represents this instance.
@@ -103,25 +103,25 @@ public readonly struct None : IEquatable<None>, IComparable<None>, IComparable
     public override string ToString() => "";
 
     /// <inheritdoc/>
-    public static bool operator <(None? left, None? right) => false;
+    public static bool operator <(Void? left, Void? right) => false;
 
     /// <inheritdoc/>
-    public static bool operator <=(None? left, None? right) => true;
+    public static bool operator <=(Void? left, Void? right) => true;
 
     /// <inheritdoc/>
-    public static bool operator >(None? left, None? right) => false;
+    public static bool operator >(Void? left, Void? right) => false;
 
     /// <inheritdoc/>
-    public static bool operator >=(None? left, None? right) => true;
+    public static bool operator >=(Void? left, Void? right) => true;
 
-    private sealed class NoneJsonConverter : JsonConverter<None>
+    private sealed class VoidJsonConverter : JsonConverter<Void>
     {
-        public override None Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override Void Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             return Value;
         }
 
-        public override void Write(Utf8JsonWriter writer, None value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, Void value, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
             writer.WriteEndObject();
