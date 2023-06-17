@@ -6,86 +6,91 @@ using System.Text.Json.Serialization;
 
 namespace FoodOnline;
 
-public sealed record Er
+/// <summary>
+/// A format similar to ProblemDetails with some extras.
+/// </summary>
+public sealed record Problem
 {
-    public required string Error { get; init; }
+    /// <summary>
+    /// The type of this problem eg: 'NotFound'.
+    /// </summary>
+    public required string Type { get; set; } = string.Empty;
 
-    public required string Reason { get; init; }
+    /// <summary>
+    /// A short, summary of the problem type.
+    /// </summary>
+    public required string Title { get; set; } = string.Empty;
 
+    /// <summary>
+    /// The HTTP status code.
+    /// </summary>
+    public int? Status { get; set; }
+
+    /// <summary>
+    /// An explanation specific to this occurrence of the problem.
+    /// </summary>
+    public string? Detail { get; set; }
+
+    /// <summary>
+    /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public Dictionary<string, JsonDocument>? Metadata { get; set; }
+    public Dictionary<string, JsonElement>? Metadata { get; set; }
 
-    public Er()
+    /// <summary>
+    /// Returns true when <see cref="Type"/> equals <typeparamref name="TException"/> as is (no namespace included).
+    /// </summary>
+    /// <typeparam name="TException">The exception to check for.</typeparam>
+    public bool Is<TException>() => typeof(TException).Name == Type;
+
+    public Problem()
     {
     }
 
     [SetsRequiredMembers]
-    public Er(string error, string reason, Dictionary<string, JsonDocument>? metadata = null)
+    public Problem(string type, string title, int? status = null, string? detail = null, Dictionary<string, JsonElement>? metadata = null)
     {
-        Error = error;
-        Reason = reason;
+        Type = type;
+        Title = title;
+        Status = status;
+        Detail = detail;
         Metadata = metadata;
     }
 
-    public bool Equals(Er? other)
+    /// <inheritdoc/>
+    public bool Equals(Problem? other)
     {
-        return Error == other?.Error;
+        return Type == other?.Type;
     }
 
+    /// <inheritdoc/>
     public override int GetHashCode()
     {
-        return Error.GetHashCode();
+        return Type.GetHashCode();
     }
 
-    public static Er Empty { get; } = new()
+    public static implicit operator Problem(Exception ex) => new()
     {
-        Error = string.Empty,
-        Reason = string.Empty,
-        Metadata = null,
+        Type = ex.GetType().Name,
+        Title = ex.GetType().FullName ?? string.Empty,
+        Detail = ex.Message
     };
 }
 
-[Union, JsonConverter(typeof(ResultJsonConverter))]
-public abstract partial record Result<T> where T : notnull
+/// <summary>
+/// Makrer interface for the <see cref="Result{T}"/> DU.
+/// </summary>
+public interface IResultDU
 {
-    public static implicit operator Result<T>(T Value) => new Ok(Value);
+}
 
+[Union, JsonConverter(typeof(ResultJsonConverter))]
+public abstract partial record Result<T> : IResultDU where T : notnull
+{
     public static implicit operator Result<T>(Exception ex) => new Er(ex);
-
-    public static implicit operator Result<T>(FoodOnline.Er er) => new Er(er.Error, er.Reason, er.Metadata);
 
     public partial record Ok(T Value);
 
-    public partial record Er
-    {
-        public string Error { get; set; }
-
-        public string Reason { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public Dictionary<string, JsonDocument>? Metadata { get; set; }
-
-        public Er(Exception ex)
-        {
-            Error = ex.GetType().Name;
-            Reason = ex.Message;
-        }
-
-        [JsonConstructor]
-        public Er(string error, string reason, Dictionary<string, JsonDocument>? metadata = null)
-        {
-            Error = error;
-            Reason = reason;
-            Metadata = metadata;
-        }
-
-        public static implicit operator FoodOnline.Er(Result<T>.Er er) => new()
-        {
-            Error = er.Error,
-            Reason = er.Reason,
-            Metadata = er.Metadata
-        };
-    }
+    public partial record Er(Problem Problem);
 
     public bool IsOk() => this is Result<T>.Ok;
 
@@ -142,20 +147,23 @@ public abstract partial record Result<T> where T : notnull
         var er = (Result<T>.Er)this;
         var erOther = other as Result<T>.Er;
 
-        return er.Error == erOther?.Error;
+        return er.Problem == erOther?.Problem;
     }
 
-    public virtual bool Equals(FoodOnline.Er? other)
+    public virtual bool Equals(T? other)
     {
-        return IsEr(out var er) && er.Error == other?.Error;
+        return other is { } && IsOk(out var ok) && EqualityComparer<T>.Default.Equals(ok, other);
     }
 
-    public override int GetHashCode()
+    public virtual bool Equals(Problem? other)
     {
-        return Match(
-            static ok => ok.Value.GetHashCode(),
-            static er => er.Error.GetHashCode());
+        return other is { } && IsEr(out var er) && er.Problem == other;
     }
+
+    public override int GetHashCode() => Match(
+        static ok => ok.Value.GetHashCode(),
+        static er => er.Problem.GetHashCode()
+    );
 }
 
 public sealed class ResultJsonConverter : JsonConverterFactory

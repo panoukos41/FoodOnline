@@ -2,6 +2,7 @@
 
 public sealed class RunnerBehavior<TMessage, TResponse> : IPipelineBehavior<TMessage, TResponse>
     where TMessage : IMessage
+    where TResponse : IResultDU
 {
     private static readonly Type ErType = typeof(Result<>.Er);
 
@@ -14,15 +15,15 @@ public sealed class RunnerBehavior<TMessage, TResponse> : IPipelineBehavior<TMes
         catch (Exception ex)
         {
             Log.Error(ex, "RQST {RequestName}", message.GetType().Name);
-            return NewErr(ex);
+            return NewEr(ex);
         }
     }
 
-    private static TResponse NewErr(Exception ex)
+    private static TResponse NewEr(Exception ex)
     {
         var type = typeof(TResponse).GetGenericArguments()[0];
         var erType = ErType.MakeGenericType(type);
 
-        return (TResponse)Activator.CreateInstance(erType, ex)!;
+        return (TResponse)Activator.CreateInstance(erType, (Problem)ex)!;
     }
 }

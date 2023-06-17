@@ -14,7 +14,7 @@ public static class Options
         PropertyNamingPolicy = null,
         PropertyNameCaseInsensitive = true,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
-        ReferenceHandler = ReferenceHandler.Preserve,
+        ReferenceHandler = ReferenceHandler.IgnoreCycles,
     };
 
     [ModuleInitializer]

@@ -36,32 +36,32 @@ public static class ResultExtensions
         where T : notnull
         => result.MatchAsync(ok => Results.NoContent(), Error);
 
-    private static IResult Error<T>(Result<T>.Er er)
+    private static BadRequest<Problem> Error<T>(Result<T>.Er er)
         where T : notnull
-        => TypedResults.BadRequest((Er)er);
+        => TypedResults.BadRequest(er.Problem);
 
     ///// <summary>
     ///// Produces a <see cref="StatusCodes.Status400BadRequest"/> response.
     ///// </summary>
-    //private static IResult BadRequest<T>();
+    //private static IResultDU BadRequest<TEntity>();
 
     ///// <summary>
     ///// Produces a <see cref="StatusCodes.Status401Unauthorized"/> response.
     ///// </summary>
-    //private static IResult Unauthorized<T>();
+    //private static IResultDU Unauthorized<TEntity>();
 
     ///// <summary>
     ///// Produces a <see cref="StatusCodes.Status404NotFound"/> response.
     ///// </summary>
-    //private static IResult NotFound<T>();
+    //private static IResultDU NotFound<TEntity>();
 
     ///// <summary>
     ///// Produces a <see cref="StatusCodes.Status409Conflict"/> response.
     ///// </summary>
-    //private static IResult Conflict<T>();
+    //private static IResultDU Conflict<TEntity>();
 
     ///// <summary>
     ///// Produces a <see cref="StatusCodes.Status422UnprocessableEntity"/> response.
     ///// </summary>
-    //private static IResult UnprocessableEntity<T>();
+    //private static IResultDU UnprocessableEntity<TEntity>();
 }
