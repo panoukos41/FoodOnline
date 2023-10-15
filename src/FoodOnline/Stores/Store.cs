@@ -1,9 +1,8 @@
 ﻿using FluentValidation;
-using FoodOnline.Abstractions;
 
 namespace FoodOnline.Stores;
 
-public sealed record Store : IEntity
+public sealed record Store : IEntity, IValid
 {
     public required Uuid Id { get; init; }
 

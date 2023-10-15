@@ -1,0 +1,125 @@
+<!--
+  NuGet automatically imports this file into any project that has a PackageReference to 'TailwindCSS'.
+
+  To see this in action, execute "dotnet restore" on a project and look in the obj/ folder for
+  a file named {Project}.csproj.g.nuget.props. You'll see inside that it contains an "Import" to this file.
+ -->
+<!--<Project>
+
+  --><!-- This will automatically call tailwindcss --><!--
+  <Target Name="TailwindCSS" AfterTargets="AfterBuild">
+    <TestTask In="test.css" Out="test.min.css" />
+  </Target>
+
+</Project>-->
+
+<Project>
+    <Target Name="ToolExists" AfterTargets="CoreBuild">
+        <Message Text="tailwindcss.msbuild: Ensuring tailwindcss cli tool exists..." />
+        <Exec Command="tailwindcss -h" StandardOutputImportance="low">
+            <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
+        </Exec>
+        <Error Condition="$(ExitCode) != 0" 
+               Text="tailwindcss.msbuild: Local install of the TailwindCSS dotnet cli tool was not found. Run 'dotnet tool install --local tailwindcss.cli' in your project folder to install the latest available release.  You may need to run 'dotnet new tool-manifest' first if this is the first dotnet tool you are installing for this solution." />
+    </Target>
+
+    <Target Name="ConfigExists" DependsOnTargets="ToolExists" AfterTargets="CoreBuild">
+        <Message Text="tailwindcss.msbuild: Ensuring tailwind.config exists..." />
+        <Exec Command="tailwindcss init" StandardOutputImportance="low">
+            <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
+        </Exec>
+    </Target>
+
+    <PropertyGroup>
+        <TailwindCSSBuildArguments></TailwindCSSBuildArguments>
+        <TailwindCSSPublishArguments></TailwindCSSPublishArguments>
+    </PropertyGroup>
+
+    <Target Name="ExecuteTailwindCss" DependsOnTargets="ConfigExists" AfterTargets="CoreBuild" Condition="$(TailwindCSSBuildArguments) != ''">
+        <Message Text="tailwindcss.msbuild: Ensuring tailwind.config exists..." />
+        <Exec Command="tailwindcss init" StandardOutputImportance="low">
+            <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
+        </Exec>
+    </Target>
+
+    <Target Name="ExecuteTailwindCss" DependsOnTargets="ConfigExists" AfterTargets="CoreBuild" Condition="$(TailwindCSSPublishArguments) != ''">
+        <Message Text="tailwindcss.msbuild: Ensuring tailwind.config exists..." />
+        <Exec Command="tailwindcss init" StandardOutputImportance="low">
+            <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
+        </Exec>
+    </Target>
+
+    <!--Run Custom task here-->
+    
+    <!--<Target Name="TailwindCSSBuildArgumentsSetup" BeforeTargets="CoreBuild">
+        <ItemGroup>
+            <_TailwindCSSBuildArguments Include="$(TailwindCSSBuildArguments)" />
+        </ItemGroup>
+        <PropertyGroup>
+            <TailwindCSSBuildArguments>$(%(_TailwindCSSBuildArguments.Identity))</TailwindCSSBuildArguments>
+        </PropertyGroup>
+    </Target>-->
+
+    <!--<Target Name="TailwindCSSBuildEnvironmentVariableMode" DependsOnTargets="ToolExists" BeforeTargets="CoreBuild" AfterTargets="TailwindCSSBuildArgumentsSetup" Condition="('$(TAILWINDCSS_MSBUILD_ARGUMENTS.Length)' &gt;= 1)">
+        <Message Importance="high" Text="tailwindcss.msbuild: Environment variable arguments 'TAILWINDCSS_MSBUILD_ARGUMENTS' found." />
+        <Message Importance="high" Text="tailwindcss.msbuild: Running tailwindcss with environment variable arguments: $(TAILWINDCSS_MSBUILD_ARGUMENTS)" />
+
+        <Message Importance="high" Text="tailwindcss $(TAILWINDCSS_MSBUILD_ARGUMENTS)" />
+        <Exec Command="tailwindcss $(TAILWINDCSS_MSBUILD_ARGUMENTS)" ConsoleToMsBuild="true" ContinueOnError="true">
+            <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+            <Output TaskParameter="ConsoleOutput" PropertyName="TailwindCSSBuildOutput" />
+        </Exec>
+        <Error Condition="$(ErrorCode) != 0" Text="tailwindcss.msbuild Failure: $(TailwindCSSBuildOutput) (Exit Code $(ErrorCode))." />
+    </Target>-->
+
+    <!--<Target Name="TailwindCSSBuildEnvironmentVariableMode" DependsOnTargets="ToolExists" BeforeTargets="CoreBuild" AfterTargets="TailwindCSSBuildArgumentsSetup" Condition="('$(TAILWINDCSS_MSBUILD_ARGUMENTS.Length)' &gt;= 1)">
+        <Message Importance="high" Text="tailwindcss.msbuild: tailwindcss.cli dotnet tool was found as a local install and environment variable arguments 'TAILWINDCSS_MSBUILD_ARGUMENTS' found." />
+        <Message Importance="high" Text="tailwindcss.msbuild: Running tailwindcss build with environment variable arguments: $(TAILWINDCSS_MSBUILD_ARGUMENTS)" />
+
+        <Message Importance="high" Text="tailwindcss $(TAILWINDCSS_MSBUILD_ARGUMENTS)" />
+        <Exec Command="tailwindcss $(TAILWINDCSS_MSBUILD_ARGUMENTS)" ConsoleToMsBuild="true" ContinueOnError="true">
+            <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+            <Output TaskParameter="ConsoleOutput" PropertyName="TailwindCSSBuildOutput" />
+        </Exec>
+        <Error Condition="$(ErrorCode) != 0" Text="tailwindcss.msbuild Failure: $(TailwindCSSBuildOutput) (Exit Code $(ErrorCode))." />
+    </Target>
+
+    <Target Name="TailwindCSSBuildArgumentMode" DependsOnTargets="ToolExists" BeforeTargets="CoreBuild" AfterTargets="TailwindCSSBuildArgumentsSetup" Condition="('$(TAILWINDCSS_MSBUILD_ARGUMENTS.Length)' == 0) And ('$(TailwindCSSBuildArguments.Length)' &gt;= 1)">
+        <Message Importance="high" Text="tailwindcss.msbuild: tailwindcss.cli dotnet tool was found as a local install and arguments found in property 'TailwindCSS$(Configuration)BuildArguments'." />
+        <Message Importance="high" Text="tailwindcss.msbuild: Running tailwindcss build with arguments: $(TailwindCSSBuildArguments)" />
+
+        <Message Importance="high" Text="dotnet tailwindcss $(TailwindCSSBuildArguments)" />
+        <Exec Command="dotnet tailwindcss $(TailwindCSSBuildArguments)" ConsoleToMsBuild="true" ContinueOnError="true">
+            <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+            <Output TaskParameter="ConsoleOutput" PropertyName="TailwindCSSBuildOutput" />
+        </Exec>
+        <Error Condition="$(ErrorCode) != 0" Text="tailwindcss.msbuild Failure: $(TailwindCSSBuildOutput) (Exit Code $(ErrorCode))." />
+    </Target>
+
+    <Target Name="TailwindCSSBuildConventionMode" DependsOnTargets="ToolExists" BeforeTargets="CoreBuild" AfterTargets="TailwindCSSBuildArgumentsSetup" Condition="('$(TAILWINDCSS_MSBUILD_ARGUMENTS.Length)' == 0) And ('$(TailwindCSSBuildArguments.Length)' == 0)">
+        <Message Importance="high" Text="tailwindcss.msbuild: tailwindcss.cli dotnet tool was found as a local install and arguments not found in property 'TailwindCSS$(Configuration)BuildArguments'." />
+        <Message Importance="high" Text="tailwindcss.msbuild: Running tailwindcss config file build: dotnet tailwindcss msbuild configuration $(Configuration)" />
+        <Exec Command="dotnet tailwindcss msbuild configuration $(Configuration)" ConsoleToMsBuild="true" ContinueOnError="true">
+            <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+            <Output TaskParameter="ConsoleOutput" PropertyName="TailwindCSSBuildOutput" />
+        </Exec>
+        <Error Condition="$(ErrorCode) != 0" Text="tailwindcss.msbuild Failure: $(TailwindCSSBuildOutput) (Exit Code $(ErrorCode))." />
+    </Target>-->
+</Project>
+
+<!--<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="https://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <CustomTaskAssembly>
+            $(MSBuildThisFileDirectory)\$(MSBuildThisFileName).dll</CustomTaskContinueOnError>
+        </PropertyGroup>
+
+    <UsingTask TaskName="$(MSBuildThisFileDirectory).TestTask" AssemlbyFile="$(CustomTaskAssembly)" />
+
+    <Target Name="RunCustomTask" AfterTargets="CoreBuild">
+        <TestTask>
+
+        </TestTask>
+    </Target>
+
+</Project>-->

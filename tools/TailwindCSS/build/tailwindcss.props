@@ -1,0 +1,25 @@
+<!--
+  NuGet automatically imports this file into any project that has a PackageReference to 'TailwindCSS'.
+
+  To see this in action, execute "dotnet restore" on a project and look in the obj/ folder for
+  a file named {Project}.csproj.g.nuget.props. You'll see inside that it contains an "Import" to this file.
+ -->
+<!--<Project>
+
+    <PropertyGroup>
+        <_TaskTfm>netstandard2.0</_TaskTfm>
+        <_TaskAssembly>$(MSBuildThisFileDirectory)..\tools\$(_TaskTfm)\TailwindCSS.dll</_TaskAssembly>
+    </PropertyGroup>
+
+    <UsingTask TaskName="FoodOnline.TestTask" AssemblyFile="$(_TaskAssembly)" />
+
+</Project>-->
+
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="https://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <!--<CustomTaskContinueOnError>False</CustomTaskContinueOnError>-->
+        <!--<CustomTaskStringParameters>Default</CustomTaskStringParameters>-->
+    </PropertyGroup>
+
+</Project>

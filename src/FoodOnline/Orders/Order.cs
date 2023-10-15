@@ -1,63 +1,25 @@
-﻿using FluentValidation;
-using FoodOnline.Abstractions;
+﻿namespace FoodOnline.Orders;
 
-namespace FoodOnline.Orders;
-
-public sealed record Order : IEntity
+public static class Order
 {
-    public required Uuid Id { get; init; }
-
-    public required Uuid StoreId { get; init; }
-
-    public required Uuid UserId { get; init; }
-
-    public OrderState State { get; set; }
-
-    public Address DeliverTo { get; set; } = Address.Empty;
-
-    public static IValidator Validator { get; } = new InlineValidator<Order>
+    public sealed record Place : Command<OrderModel, CreatedResponse>
     {
-        // todo: Implement Order Validator
-    };
-}
+        public Place(OrderModel data) : base(data)
+        {
+        }
+    }
 
-/// <summary>
-/// Describes several states an order can be in.
-/// </summary>
-public enum OrderState
-{
-    /// <summary>
-    /// The order has been placed by the customer succesfully.
-    /// </summary>
-    Placed,
+    public sealed record Find : FindQuery<OrderModel>
+    {
+        public Find(Uuid id) : base(id)
+        {
+        }
+    }
 
-    /// <summary>
-    /// The order has been received by the store.
-    /// </summary>
-    Received,
+    public record ChangeState : Command<Void>
+    {
+        public required Uuid OrderId { get; init; }
 
-    /// <summary>
-    /// The store has confirmed the order.
-    /// </summary>
-    Confirmed,
-
-    /// <summary>
-    /// The order is on it's way to the customer.
-    /// </summary>
-    Delivering,
-
-    /// <summary>
-    /// The order has been delivered.
-    /// </summary>
-    Delivered,
-
-    /// <summary>
-    /// The order was rejected by the store.
-    /// </summary>
-    Rejected,
-
-    /// <summary>
-    /// The order was canceled.
-    /// </summary>
-    Canceled
+        public required OrderState OrderState { get; init; }
+    }
 }

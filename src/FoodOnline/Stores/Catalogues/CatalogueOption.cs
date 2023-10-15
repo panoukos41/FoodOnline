@@ -1,5 +1,5 @@
-﻿using Dunet;
-using FoodOnline.Tools;
+﻿using Core.Tools;
+using Dunet;
 using System.Text.Json.Serialization;
 
 namespace FoodOnline.Stores.Catalogues;
@@ -17,12 +17,12 @@ public partial record CatalogueOption
 
     public partial record SingleChoice
     {
-        public HashSet<CatalogueChoice> Choices { get; } = new(FlEqual.For<CatalogueChoice>((l, r) => l.Id == r.Id));
+        public HashSet<CatalogueChoice> Choices { get; } = new(InlineEqual.For<CatalogueChoice>((l, r) => l.Id == r.Id));
     }
 
     public partial record MultiChoice
     {
-        public HashSet<CatalogueChoice> Choices { get; } = new(FlEqual.For<CatalogueChoice>((l, r) => l.Id == r.Id));
+        public HashSet<CatalogueChoice> Choices { get; } = new(InlineEqual.For<CatalogueChoice>((l, r) => l.Id == r.Id));
     }
 }
 

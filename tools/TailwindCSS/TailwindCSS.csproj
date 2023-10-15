@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>TailwindCSS</AssemblyName>
+    <!--
+      This changes the default folder where assemblies will be placed in the package.
+      The default is 'lib', but that is incorrect since these assemblies are mean to be used
+      by MSBuild, and to meant to be referenced as API from the NuGet package.
+    -->
+    <BuildOutputTargetFolder>tools</BuildOutputTargetFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CliWrap" Version="3.6.4" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.7.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.7.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--<Content Include="build\**\*" PackagePath="build\" />-->
+
+      <Content Include="TailwindCSS.props" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" PackagePath="build\" />
+      <Content Include="TailwindCSS.targets" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" PackagePath="build\" />
+  </ItemGroup>
+
+</Project>

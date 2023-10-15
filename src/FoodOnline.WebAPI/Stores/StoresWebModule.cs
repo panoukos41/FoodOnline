@@ -1,21 +1,19 @@
-﻿using FoodOnline.Abstractions;
-using FoodOnline.Commons.Extensions;
-using FoodOnline.Stores.Requests;
+﻿using FoodOnline.Stores.Requests;
 using Mediator;
 
 namespace FoodOnline.Stores;
 
 /// <summary>
-/// This already adds <see cref="StoresInfraModule"/>
+/// This already adds <see cref="StoresAppModule"/>
 /// </summary>
-public sealed class StoresWebModule : IWebModule
+public sealed class StoresWebModule : IWebModule<StoresWebModule>
 {
-    public static void Add(WebApplicationBuilder builder)
+    public static void Add(WebApplicationBuilder builder, StoresWebModule module)
     {
         var services = builder.Services;
         var configuration = builder.Configuration;
 
-        services.Add<StoresInfraModule>(configuration);
+        services.AddAppModule<StoresAppModule>(configuration);
     }
 
     public static void Use(WebApplication app)
@@ -25,17 +23,17 @@ public sealed class StoresWebModule : IWebModule
 
         group.MapGet("{storeId}", (string storeId, ISender sender) =>
         {
-            return sender.Send(new GetStore(Uuid.Parse(storeId))).Ok();
+            //return sender.Send(new GetStore(Uuid.Parse(storeId))).Ok();
         });
 
         group.MapPost("", (CreateStore createStore, ISender sender) =>
         {
-            return sender.Send(createStore).Ok();
+            //return sender.Send(createStore).Ok();
         });
 
         group.MapPut("", (UpdateStore updateStore, ISender sender) =>
         {
-            return sender.Send(updateStore).Ok();
+            //return sender.Send(updateStore).Ok();
         });
     }
 }

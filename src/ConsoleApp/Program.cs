@@ -1,10 +1,20 @@
-﻿using FoodOnline;
+﻿using Amazon.Runtime;
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Jobs;
+using BenchmarkDotNet.Running;
+using FluentValidation.Results;
+using FoodOnline;
 using FoodOnline.Auths;
+using FoodOnline.Commons.Behaviors;
 using FoodOnline.Orders;
+using FoodOnline.Users;
+using FoodOnline.Users.Requests;
 using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;
 using Serilog;
 using System.Text.Json;
+
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -12,7 +22,7 @@ var services = builder.Services;
 
 Log.Logger = new LoggerConfiguration().CreateLogger();
 
-//services.ConfigureInfraModules(configuration);
+//services.ConfigureAppModules(configuration);
 
 //var app = builder.Build();
 

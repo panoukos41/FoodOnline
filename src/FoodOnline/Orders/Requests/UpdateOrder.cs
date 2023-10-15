@@ -1,6 +1,6 @@
 ﻿namespace FoodOnline.Orders.Requests;
 
-public class UpdateOrder : IRequest
+public sealed record UpdateOrder : Command<Void>
 {
     public Uuid OrderId { get; set; }
 

@@ -1,4 +1,4 @@
-﻿using FoodOnline.Tools;
+﻿using Core.Tools;
 
 namespace FoodOnline.Stores.Catalogues;
 
@@ -8,5 +8,5 @@ public sealed record Catalogue
 
     public required Currency Currency { get; set; } = Currency.EUR;
 
-    public HashSet<CatalogueEntry> Entries { get; } = new(FlEqual.For<CatalogueEntry>((l, r) => l.Id == r.Id));
+    public HashSet<CatalogueEntry> Entries { get; } = new(InlineEqual.For<CatalogueEntry>((l, r) => l.Id == r.Id));
 }

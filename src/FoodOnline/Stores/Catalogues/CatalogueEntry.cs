@@ -1,4 +1,4 @@
-﻿using FoodOnline.Tools;
+﻿using Core.Tools;
 
 namespace FoodOnline.Stores.Catalogues;
 
@@ -12,5 +12,5 @@ public sealed record CatalogueEntry
 
     public decimal DisplayPrice { get; set; }
 
-    public HashSet<CatalogueOption> Options { get; } = new(FlEqual.For<CatalogueOption>((l, r) => l.Id == r.Id));
+    public HashSet<CatalogueOption> Options { get; } = new(InlineEqual.For<CatalogueOption>((l, r) => l.Id == r.Id));
 }
