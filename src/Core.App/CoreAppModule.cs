@@ -19,5 +19,6 @@ public sealed class CoreAppModule : IAppModule<CoreAppModule>
         services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(LogRequestBehavior<,>));
         services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(RunnerBehavior<,>));
         services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(ValidBehavior<,>));
+        services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehavior<,>));
     }
 }

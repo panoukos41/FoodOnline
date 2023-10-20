@@ -23,8 +23,9 @@ public abstract record FindQuery<TResult> : Query<TResult>, IValid where TResult
         Id = id;
     }
 
-    public static IValidator Validator { get; } = new InlineValidator<FindQuery<TResult>>
+    public static IValidator Validator { get; } = InlineValidator.For<FindQuery<TResult>>(data =>
     {
-        static v => v.RuleFor(x => x.Id).NotEmpty()
-    };
+        data.RuleFor(x => x.Id)
+            .NotEmpty();
+    });
 }

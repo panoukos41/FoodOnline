@@ -2,32 +2,32 @@
 
 namespace Core.Commons.Behaviors;
 
-public sealed class LogRequestBehavior<TMessage, TResponse> : IPipelineBehavior<TMessage, TResponse>
-    where TMessage : IMessage
+public sealed class LogRequestBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IBaseRequest
 {
-    private readonly ILoggerFor<TMessage>? loggerFor;
+    private readonly ILoggerFor<TRequest>? loggerFor;
 
-    public LogRequestBehavior(ILoggerFor<TMessage>? loggerFor)
+    public LogRequestBehavior(ILoggerFor<TRequest>? loggerFor)
     {
         this.loggerFor = loggerFor;
     }
 
-    public ValueTask<TResponse> Handle(TMessage message, CancellationToken cancellationToken, MessageHandlerDelegate<TMessage, TResponse> next)
+    public ValueTask<TResponse> Handle(TRequest request, CancellationToken cancellationToken, MessageHandlerDelegate<TRequest, TResponse> next)
     {
-        var logger = Log.ForContext<TMessage>();
-        if (message is ISelfLog customLogging)
+        var logger = Log.ForContext<TRequest>();
+        if (request is ISelfLog customLogging)
         {
             customLogging.Log(logger);
         }
         else if (loggerFor is { })
         {
-            loggerFor.Log(message);
+            loggerFor.Log(request);
         }
         else
         {
-            logger.Information("RQST {Request}", message);
+            logger.Information("RQST {Request}", request);
         }
 
-        return next(message, cancellationToken);
+        return next(request, cancellationToken);
     }
 }

@@ -3,22 +3,22 @@ using FluentValidation.Results;
 
 namespace Core.Commons.Behaviors;
 
-public sealed class FluentValidationBehavior<TMessage, TResponse> : IPipelineBehavior<TMessage, TResponse>
-    where TMessage : IMessage
+public sealed class FluentValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IBaseRequest
     where TResponse : IResultUnion
 {
-    private readonly IEnumerable<IValidator<TMessage>>? validators;
+    private readonly IEnumerable<IValidator<TRequest>>? validators;
 
-    public FluentValidationBehavior(IEnumerable<IValidator<TMessage>>? validators)
+    public FluentValidationBehavior(IEnumerable<IValidator<TRequest>>? validators)
     {
         this.validators = validators;
     }
 
-    public async ValueTask<TResponse> Handle(TMessage message, CancellationToken cancellationToken, MessageHandlerDelegate<TMessage, TResponse> next)
+    public async ValueTask<TResponse> Handle(TRequest request, CancellationToken cancellationToken, MessageHandlerDelegate<TRequest, TResponse> next)
     {
         if (validators is not null)
         {
-            IValidationContext validationContext = new ValidationContext<TMessage>(message);
+            IValidationContext validationContext = new ValidationContext<TRequest>(request);
             var validationResults = new List<ValidationFailure>();
 
             foreach (var validator in validators)
@@ -33,6 +33,6 @@ public sealed class FluentValidationBehavior<TMessage, TResponse> : IPipelineBeh
             }
         }
 
-        return await next(message, cancellationToken);
+        return await next(request, cancellationToken);
     }
 }

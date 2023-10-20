@@ -23,9 +23,12 @@ public sealed record Location : IValid
 
     public static Location Empty { get; } = new(0, 0);
 
-    public static IValidator Validator { get; } = new InlineValidator<Location>
+    public static IValidator Validator { get; } = InlineValidator.For<Location>(data =>
     {
-        static v => v.RuleFor(x => x.Latitude).InclusiveBetween(-90,90),
-        static v => v.RuleFor(x => x.Longitude).InclusiveBetween(-180,180),
-    };
+        data.RuleFor(x => x.Latitude)
+            .InclusiveBetween(-90, 90);
+
+        data.RuleFor(x => x.Longitude)
+            .InclusiveBetween(-180, 180);
+    });
 }

@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Security.Principal;
 
-namespace FoodOnline.Commons;
+namespace Core.Commons;
 
 public sealed class UserPrincipal : ClaimsPrincipal, IEnumerable<Claim>
 {

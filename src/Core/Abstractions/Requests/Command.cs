@@ -27,10 +27,10 @@ public abstract record Command<TData, TResult> : Command<TResult>, IValid
         Data = data;
     }
 
-    public static IValidator Validator { get; } = new InlineValidator<Command<TData, TResult>>
+    public static IValidator Validator { get; } = InlineValidator.For<Command<TData, TResult>>(data =>
     {
-        static v => v.RuleFor(x => x.Data).SetValidator((IValidator<TData>)TData.Validator)
-    };
+        data.RuleFor(x => x.Data).SetValidator((IValidator<TData>)TData.Validator);
+    });
 }
 
 /// <summary>
@@ -50,8 +50,9 @@ public abstract record DeleteCommand : Command<Void>, IValid
         Id = model.Id;
     }
 
-    public static IValidator Validator { get; } = new InlineValidator<DeleteCommand>
+    public static IValidator Validator { get; } = InlineValidator.For<DeleteCommand>(data =>
     {
-        static v => v.RuleFor(x => x.Id).NotEmpty()
-    };
+        data.RuleFor(x => x.Id)
+            .NotEmpty();
+    });
 }
