@@ -14,11 +14,3 @@ public abstract class CommandHandler<TCommand, TResult> :
     protected static readonly PropertyInfo IdProp =
         typeof(IEntity).GetProperty(nameof(IEntity.Id), BindingFlags.Public | BindingFlags.Instance)!;
 }
-
-public abstract class CommandHandler<TCommand, TData, TResult> :
-    CommandHandler<TCommand, TResult>
-    where TCommand : Command<TData, TResult>
-    where TData : notnull, IValid
-    where TResult : notnull
-{
-}

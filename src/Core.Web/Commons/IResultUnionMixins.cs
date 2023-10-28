@@ -9,25 +9,23 @@ public static class IResultUnionMixins
     /// </summary>
     public static ValueTask<IResult> Ok<T>(this ValueTask<Result<T>> result)
         where T : notnull
-    {
-        return result.MatchAsync(ok => Results.Ok(ok.Value), Error);
-    }
+        => result.MatchAsync(ok => Results.Ok(ok.Value), Error);
 
     /// <summary>
     /// Produces a <see cref="StatusCodes.Status201Created"/> response.
     /// </summary>
     /// <param name="createdAt">Produces the URI at which the content has been created.</param>
-    public static ValueTask<IResult> Created<T>(this ValueTask<Result<T>> result, Func<T, string> createdAt)
+    public static ValueTask<IResult> Created<T>(this ValueTask<Result<T>> result, Func<T, string>? createdAt = null)
         where T : notnull
-        => result.MatchAsync(ok => Results.Created(createdAt(ok.Value), ok), Error);
+        => result.MatchAsync(ok => Results.Created(createdAt?.Invoke(ok.Value), ok.Value), Error);
 
     /// <summary>
     /// Produces a <see cref="StatusCodes.Status202Accepted"/> response.
     /// </summary>
     /// <param name="acceptedAt">Produces the URI with the location at which the status of requested content can be monitored.</param>
-    public static ValueTask<IResult> Accepted<T>(this ValueTask<Result<T>> result, Func<T, string> acceptedAt)
+    public static ValueTask<IResult> Accepted<T>(this ValueTask<Result<T>> result, Func<T, string>? acceptedAt = null)
         where T : notnull
-        => result.MatchAsync(ok => Results.Created(acceptedAt(ok.Value), ok), Error);
+        => result.MatchAsync(ok => Results.Accepted(acceptedAt?.Invoke(ok.Value), ok.Value), Error);
 
     /// <summary>
     /// Produces a <see cref="StatusCodes.Status204NoContent"/> response.
@@ -40,22 +38,22 @@ public static class IResultUnionMixins
         where T : notnull
         => er.Problem switch
         {
-            { Status: 400 } => TypedResults.Unauthorized(), //"Bad Request"
+            { Status: 400 } => TypedResults.BadRequest(),   //"Bad Request"
             { Status: 401 } => TypedResults.Unauthorized(), //"Unauthorized"
-            { Status: 403 } => TypedResults.Unauthorized(), //"Forbidden"
-            { Status: 404 } => TypedResults.Unauthorized(), //"Not Found"
-            { Status: 405 } => TypedResults.Unauthorized(), //"Method Not Allowed"
-            { Status: 406 } => TypedResults.Unauthorized(), //"Not Acceptable"
-            { Status: 408 } => TypedResults.Unauthorized(), //"Request Timeout"
-            { Status: 409 } => TypedResults.Unauthorized(), //"Conflict"
-            { Status: 412 } => TypedResults.Unauthorized(), //"Precondition Failed"
-            { Status: 415 } => TypedResults.Unauthorized(), //"Unsupported Media Type"
-            { Status: 422 } => TypedResults.Unauthorized(), //"Unprocessable Entity"
-            { Status: 426 } => TypedResults.Unauthorized(), //"Upgrade Required"
-            { Status: 500 } => TypedResults.Unauthorized(), //"An error occurred while processing your request."
-            { Status: 502 } => TypedResults.Unauthorized(), //"Bad Gateway"
-            { Status: 503 } => TypedResults.Unauthorized(), //"Service Unavailable"
-            { Status: 504 } => TypedResults.Unauthorized(), //"Gateway Timeout"
-            _ => TypedResults.BadRequest(er.Problem),
+            { Status: 403 } => TypedResults.Forbid(),       //"Forbidden"
+            { Status: 404 } => TypedResults.NotFound(),     //"Not Found"
+            //{ Status: 405 } => TypedResults.BadRequest(),   //"Method Not Allowed"
+            //{ Status: 406 } => TypedResults.BadRequest(),   //"Not Acceptable"
+            //{ Status: 408 } => TypedResults.BadRequest(),   //"Request Timeout"
+            { Status: 409 } => TypedResults.Conflict(),     //"Conflict"
+            //{ Status: 412 } => TypedResults.BadRequest(),   //"Precondition Failed"
+            //{ Status: 415 } => TypedResults.BadRequest(),   //"Unsupported Media Type"
+            { Status: 422 } => TypedResults.UnprocessableEntity(), //"Unprocessable Entity"
+            //{ Status: 426 } => TypedResults.Unauthorized(), //"Upgrade Required"
+            //{ Status: 500 } => TypedResults.BadRequest(), //"An error occurred while processing your request."
+            //{ Status: 502 } => TypedResults.Unauthorized(), //"Bad Gateway"
+            //{ Status: 503 } => TypedResults.BadRequest(), //"Service Unavailable"
+            //{ Status: 504 } => TypedResults.Unauthorized(), //"Gateway Timeout"
+            _ => TypedResults.StatusCode(er.Problem.Status ?? StatusCodes.Status500InternalServerError)
         };
 }

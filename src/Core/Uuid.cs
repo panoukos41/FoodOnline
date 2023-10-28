@@ -24,9 +24,14 @@ public readonly struct Uuid : IParsable<Uuid>
         this.nanoId = nanoId;
     }
 
-    public static Uuid NewUuid()
+    /// <summary>
+    /// Get a new <see cref="Uuid"/> with the default <paramref name="size"/> of 11.
+    /// </summary>
+    /// <param name="size">The size of the id.</param>
+    /// <returns>A new <see cref="Uuid"/>.</returns>
+    public static Uuid NewUuid(int size = 11)
     {
-        return new(Nanoid.Generate(size: 11));
+        return new(Nanoid.Generate(size: size));
     }
 
     public override string ToString()

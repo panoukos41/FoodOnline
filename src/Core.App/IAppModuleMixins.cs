@@ -1,4 +1,5 @@
 ﻿global using Mediator;
+using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -20,5 +21,18 @@ public static class IAppModuleMixins
         TAppModule.Add(services, configuration, module);
 
         Log.ForContext<TAppModule>().Debug("Added AppModule: {AppModule}", typeof(TAppModule).Name);
+    }
+
+    public static void ValidateAndThrow<TAppModule>(this TAppModule module)
+        where TAppModule : class, IAppModule<TAppModule>, IValid, new()
+    {
+        var ctx = new ValidationContext<TAppModule>(module);
+        var result = TAppModule.Validator.Validate(ctx);
+
+        if (result.Errors is { Count: > 0 } errors)
+        {
+            var type = module.GetType().Name;
+            throw new ValidationException($"Add {type}", errors, true);
+        }
     }
 }

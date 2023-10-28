@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 
-namespace FoodOnline.App.MongoDb;
+namespace Core.MongoDb.Commons;
 
 public sealed class MongoDbContext
 {

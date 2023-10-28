@@ -13,6 +13,20 @@ public static class Problems
         Detail = "Validation problems have occurred with your model. Check the Metadata:ValidationErrors a list of ValidationFailure objects."
     };
 
+    public static Problem Unauthorized { get; } = new()
+    {
+        Type = nameof(Unauthorized),
+        Title = nameof(Unauthorized),
+        Status = 401
+    };
+
+    public static Problem Forbid { get; } = new()
+    {
+        Type = nameof(Forbid),
+        Title = nameof(Forbid),
+        Status = 403
+    };
+
     public static Problem NotFound { get; } = new()
     {
         Type = nameof(NotFound),

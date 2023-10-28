@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-      <RootNamespace>$(RootNamespace).UI.Web</RootNamespace>
+    <RootNamespace>FoodOnline.UI.Web</RootNamespace>
   </PropertyGroup>
 
   <Import Project="../../tools/TailwindCSS/build/tailwindcss.targets" />

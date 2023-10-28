@@ -1,4 +1,5 @@
 ﻿using Core.Commons;
+using Mediator;
 
 namespace Core.Abstractions.Requests;
 

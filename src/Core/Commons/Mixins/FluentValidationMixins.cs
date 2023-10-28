@@ -1,6 +1,5 @@
 ﻿using Core;
 using Core.Commons;
-using FluentValidation.Validators;
 
 namespace FluentValidation;
 
@@ -32,29 +31,3 @@ public static class FluentValidationMixins
         .NotEmpty()
         .WithName("Phone");
 }
-
-//public class NotEmptyValidator<T, TProperty> : PropertyValidator<T, TProperty>
-//{
-
-//    public override string Name => "NotEmptyValidator";
-
-//    public override bool IsValid(ValidationContext<T> context, TProperty value)
-//    {
-//        switch (value)
-//        {
-//            case null:
-//            case string s when string.IsNullOrWhiteSpace(s):
-//            case ICollection { Count: 0 }:
-//            case Array { Length: 0 }:
-//            case IEnumerable e when !e.GetEnumerator().MoveNext():
-//                return false;
-//        }
-
-//        return !EqualityComparer<TProperty>.Default.Equals(value, default);
-//    }
-
-//    protected override string GetDefaultMessageTemplate(string errorCode)
-//    {
-//        return Localized(errorCode, Name);
-//    }
-//}

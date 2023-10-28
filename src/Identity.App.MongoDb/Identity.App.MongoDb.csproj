@@ -2,7 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>Identity</RootNamespace>
+    <RootNamespace>Identity.MongoDb</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mediator.SourceGenerator" Version="2.1.7" PrivateAssets="all" />
+    <PackageReference Include="OpenIddict.Core" Version="4.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core.App.MongoDb\Core.App.MongoDb.csproj" />
+    <ProjectReference Include="..\Identity\Identity.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Users\Handlers\" />
+  </ItemGroup>
 
 </Project>

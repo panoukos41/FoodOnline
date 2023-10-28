@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Mediator;
 
 namespace Core.Abstractions.Requests;
 
@@ -8,6 +9,17 @@ namespace Core.Abstractions.Requests;
 /// <typeparam name="TResult">The type of the result object.</typeparam>
 public abstract record Query<TResult> : IQuery<Result<TResult>> where TResult : notnull
 {
+}
+
+/// <summary>
+/// Represents a list query request.
+/// </summary>
+/// <typeparam name="TResult">The type of the result object.</typeparam>
+public abstract record ListQuery<TResult> : IQuery<Result<TResult>> where TResult : notnull
+{
+    public int? Page { get; set; }
+
+    public int? Size { get; set; }
 }
 
 /// <summary>

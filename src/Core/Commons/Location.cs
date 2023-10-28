@@ -31,4 +31,16 @@ public sealed record Location : IValid
         data.RuleFor(x => x.Longitude)
             .InclusiveBetween(-180, 180);
     });
+
+    public bool Equals(Location? other)
+    {
+        return other is { }
+            && Latitude == other.Latitude
+            && Longitude == other.Longitude;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Latitude, Longitude);
+    }
 }

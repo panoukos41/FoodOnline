@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 
-namespace FoodOnline.Commons.BsonSerializesrs;
+namespace Core.MongoDb.Commons.BsonSerializers;
 
 public sealed class UuidBsonSerializer : SerializerBase<Uuid>
 {
