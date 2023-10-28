@@ -33,19 +33,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodOnline.App.MongoDb", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src_id", "src_id", "{43345D8C-EDD8-4177-B1C1-AFDBE713909B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity", "src\Identity\Identity.csproj", "{D002DBDD-D03A-480A-B648-4E3675D0B6B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity", "src\Identity\Identity.csproj", "{D002DBDD-D03A-480A-B648-4E3675D0B6B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.App.MongoDb", "src\Identity.App.MongoDb\Identity.App.MongoDb.csproj", "{47A698A3-C497-4D63-A397-4735CD3D2F90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.App.MongoDb", "src\Identity.App.MongoDb\Identity.App.MongoDb.csproj", "{47A698A3-C497-4D63-A397-4735CD3D2F90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.UI.Web", "src\Identity.UI.Web\Identity.UI.Web.csproj", "{DFF3BFBE-7F80-48A0-B5CA-4687AF63979C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.UI.Web", "src\Identity.UI.Web\Identity.UI.Web.csproj", "{DFF3BFBE-7F80-48A0-B5CA-4687AF63979C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4A10A11E-22E4-4A1F-8128-46A9A55580D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "src\Core\Core.csproj", "{8F6B0B02-C3CE-44F9-A747-750CCDABCB73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "src\Core\Core.csproj", "{8F6B0B02-C3CE-44F9-A747-750CCDABCB73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.App", "src\Core.App\Core.App.csproj", "{3111ADF0-4AB6-4A29-829B-BFB853BA59E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.App", "src\Core.App\Core.App.csproj", "{3111ADF0-4AB6-4A29-829B-BFB853BA59E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Web", "src\Core.Web\Core.Web.csproj", "{76E9FC1B-A179-407D-8448-6FBA272EC010}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Web", "src\Core.Web\Core.Web.csproj", "{76E9FC1B-A179-407D-8448-6FBA272EC010}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.App.MongoDb", "src\Core.App.MongoDb\Core.App.MongoDb.csproj", "{12A3E4CF-DBAA-4DF1-8E80-40D56F7B55B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,6 +103,10 @@ Global
 		{76E9FC1B-A179-407D-8448-6FBA272EC010}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76E9FC1B-A179-407D-8448-6FBA272EC010}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76E9FC1B-A179-407D-8448-6FBA272EC010}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12A3E4CF-DBAA-4DF1-8E80-40D56F7B55B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12A3E4CF-DBAA-4DF1-8E80-40D56F7B55B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12A3E4CF-DBAA-4DF1-8E80-40D56F7B55B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12A3E4CF-DBAA-4DF1-8E80-40D56F7B55B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -118,6 +124,7 @@ Global
 		{8F6B0B02-C3CE-44F9-A747-750CCDABCB73} = {4A10A11E-22E4-4A1F-8128-46A9A55580D7}
 		{3111ADF0-4AB6-4A29-829B-BFB853BA59E7} = {4A10A11E-22E4-4A1F-8128-46A9A55580D7}
 		{76E9FC1B-A179-407D-8448-6FBA272EC010} = {4A10A11E-22E4-4A1F-8128-46A9A55580D7}
+		{12A3E4CF-DBAA-4DF1-8E80-40D56F7B55B4} = {4A10A11E-22E4-4A1F-8128-46A9A55580D7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D11CE247-5FC4-4472-9913-48B1160B8260}
