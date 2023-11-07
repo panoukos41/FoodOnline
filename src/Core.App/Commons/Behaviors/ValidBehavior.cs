@@ -3,7 +3,7 @@
 namespace Core.Commons.Behaviors;
 
 public sealed class ValidBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IBaseRequest, IValid
+    where TRequest : IMessage, IValid
     where TResponse : IResultUnion
 {
     public ValueTask<TResponse> Handle(TRequest message, CancellationToken cancellationToken, MessageHandlerDelegate<TRequest, TResponse> next)

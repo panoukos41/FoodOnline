@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace Core;
@@ -35,7 +35,7 @@ public sealed record Problem
     /// <summary>
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public Dictionary<string, JsonElement>? Metadata { get; init; }
+    public JsonObject? Metadata { get; init; }
 
     /// <summary>
     /// Gets the <see cref="System.Exception"/> instance that caused the current problem.
@@ -60,7 +60,7 @@ public sealed record Problem
     }
 
     [SetsRequiredMembers]
-    public Problem(string type, string title, int? status = null, string? detail = null, Dictionary<string, JsonElement>? metadata = null, Exception? exception = null)
+    public Problem(string type, string title, int? status = null, string? detail = null, JsonObject? metadata = null, Exception? exception = null)
     {
         Type = type;
         Title = title;

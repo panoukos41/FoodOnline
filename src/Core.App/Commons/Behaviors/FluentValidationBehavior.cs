@@ -4,7 +4,7 @@ using FluentValidation.Results;
 namespace Core.Commons.Behaviors;
 
 public sealed class FluentValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IBaseRequest
+    where TRequest : IMessage
     where TResponse : IResultUnion
 {
     private readonly IEnumerable<IValidator<TRequest>>? validators;

@@ -1,5 +1,4 @@
-﻿global using Mediator;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

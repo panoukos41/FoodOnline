@@ -17,8 +17,10 @@ public sealed class CoreAppModule : IAppModule<CoreAppModule>
     public static void Add(IServiceCollection services, IConfiguration configuration, CoreAppModule module)
     {
         services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(LogRequestBehavior<,>));
-        services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(RunnerBehavior<,>));
         services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(ValidBehavior<,>));
         services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehavior<,>));
+        services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(RunnerBehavior<,>));
+
+
     }
 }

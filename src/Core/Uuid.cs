@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
-using System.Text.Json;
 using System.Text.Json.Serialization;
+using Core.Commons.JsonConverters;
 
 namespace Core;
 
@@ -85,19 +85,8 @@ public readonly struct Uuid : IParsable<Uuid>
     public static bool operator !=(Uuid left, Uuid right) => left.nanoId != right.nanoId;
 
     #endregion
-}
 
-public sealed class UuidJsonConverter : JsonConverter<Uuid>
-{
-    public override Uuid Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        return Uuid.TryParse(reader.GetString(), out var uuid) ? uuid : Uuid.Empty;
-    }
-
-    public override void Write(Utf8JsonWriter writer, Uuid value, JsonSerializerOptions options)
-    {
-        writer.WriteRawValue($"\"{value}\"");
-    }
+    public static implicit operator string(Uuid value) => value.nanoId;
 }
 
 // MIT License

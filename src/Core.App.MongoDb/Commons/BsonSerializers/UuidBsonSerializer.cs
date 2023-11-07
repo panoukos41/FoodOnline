@@ -3,9 +3,21 @@ using MongoDB.Bson.Serialization.Serializers;
 
 namespace Core.MongoDb.Commons.BsonSerializers;
 
-public sealed class UuidBsonSerializer : SerializerBase<Uuid>
+public sealed class UuidBsonSerializer : SerializerBase<Uuid>, IBsonSerializationProvider
 {
-    public static bool TryRegister() => BsonSerializer.TryRegisterSerializer(new UuidBsonSerializer());
+    private static readonly Type type = typeof(Uuid);
+
+    private static UuidBsonSerializer Provider { get; } = new();
+
+    public static void RegisterProvider()
+    {
+        BsonSerializer.RegisterSerializationProvider(Provider);
+    }
+
+    public IBsonSerializer GetSerializer(Type type)
+    {
+        return type == UuidBsonSerializer.type ? Provider : null!;
+    }
 
     public override Uuid Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
     {

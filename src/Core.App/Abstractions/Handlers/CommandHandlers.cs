@@ -9,8 +9,4 @@ public abstract class CommandHandler<TCommand, TResult> :
     where TResult : notnull
 {
     public abstract ValueTask<Result<TResult>> Handle(TCommand command, CancellationToken cancellationToken);
-
-    // todo: Refactor this
-    protected static readonly PropertyInfo IdProp =
-        typeof(IEntity).GetProperty(nameof(IEntity.Id), BindingFlags.Public | BindingFlags.Instance)!;
 }

@@ -23,6 +23,11 @@ public class SwaggerWebModule : SwaggerUIOptions, IWebModule<SwaggerWebModule>
                 Type = "string",
                 Default = new OpenApiString(string.Empty)
             });
+            options.MapType<Phone>(() => new OpenApiSchema
+            {
+                Type = "string",
+                Default = new OpenApiString(string.Empty)
+            });
         });
     }
 

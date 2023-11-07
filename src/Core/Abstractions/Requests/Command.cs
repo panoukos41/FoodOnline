@@ -3,11 +3,16 @@ using Mediator;
 
 namespace Core.Abstractions.Requests;
 
+public interface IRequestId
+{
+    Guid RequestId { get; init; }
+}
+
 /// <summary>
 /// Represents a base command.
 /// </summary>
 /// <typeparam name="TResult">The type of the result object.</typeparam>
-public abstract record Command<TResult> : ICommand<Result<TResult>>
+public abstract record Command<TResult> : ICommand<Result<TResult>>, IRequestId
     where TResult : notnull
 {
     public Guid RequestId { get; init; } = Guid.NewGuid();

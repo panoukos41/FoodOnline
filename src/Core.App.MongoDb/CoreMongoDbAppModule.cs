@@ -1,6 +1,7 @@
 ﻿using Core.Abstractions;
 using Core.Commons;
 using Core.MongoDb.Commons;
+using Core.MongoDb.Commons.BsonSerializers;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,12 +22,13 @@ public class CoreMongoDbAppModule : IAppModule<CoreMongoDbAppModule>, IValid
     {
         module.ValidateAndThrow();
 
-        if (module.UserPrincipal is { })
-        {
-            services.TryAddScoped(module.UserPrincipal);
-        }
+        //if (module.UserPrincipal is { })
+        //{
+        //    services.TryAddScoped(module.UserPrincipal);
+        //}
 
-        //UuidBsonSerializer.TryRegister();
+        PhoneBsonSerializer.RegisterProvider();
+        UuidBsonSerializer.RegisterProvider();
 
         services.AddSingleton(static sp =>
         {

@@ -1,18 +1,26 @@
-﻿using Core.Abstractions.Requests;
+﻿using Core.Abstractions.Events;
+using Core.Abstractions.Requests;
 
 namespace Core.Commons.Behaviors;
 
 public sealed class RunnerBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IBaseRequest
+    where TRequest : IMessage
     where TResponse : IResultUnion
 {
-    private readonly IPublisher publisher;
-    private readonly UserPrincipal? user;
+    private readonly IEventHandler<RequestSucceeded>[] successEventHandlers;
+    private readonly IEventHandler<RequestFailed>[] failedEventHandlers;
 
-    public RunnerBehavior(IPublisher publisher, UserPrincipal? user)
+    //private readonly IPublisher publisher;
+    //private readonly UserPrincipal? user;
+
+    public RunnerBehavior(
+        IEnumerable<IEventHandler<RequestSucceeded>> successEventHandlers,
+        IEnumerable<IEventHandler<RequestFailed>> failedEventHandlers)
     {
-        this.publisher = publisher;
-        this.user = user;
+        this.successEventHandlers = successEventHandlers.ToArray();
+        this.failedEventHandlers = failedEventHandlers.ToArray();
+        //this.publisher = publisher;
+        //this.user = user;
     }
 
     public async ValueTask<TResponse> Handle(TRequest request, CancellationToken cancellationToken, MessageHandlerDelegate<TRequest, TResponse> next)
@@ -43,7 +51,11 @@ public sealed class RunnerBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
             Request = request,
             Context = GetRequestContext()
         };
-        _ = publisher.Publish(@event).AsTask().ConfigureAwait(false);
+        foreach (var h in successEventHandlers)
+        {
+            // todo: Add logger on exception.
+            FireAndForget(h.Handle(@event, default));
+        }
     }
 
     private void PublishRequestFailed(TRequest request)
@@ -53,12 +65,50 @@ public sealed class RunnerBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
             Request = request,
             Context = GetRequestContext()
         };
-        _ = publisher.Publish(@event).AsTask().ConfigureAwait(false);
+        foreach (var h in failedEventHandlers)
+        {
+            // todo: Add logger on exception.
+            FireAndForget(h.Handle(@event, default));
+        }
     }
 
     private RequestContext GetRequestContext() => new()
     {
         Items = new Dictionary<object, object?>(),
-        User = user,
+        User = new UserPrincipal()
     };
+
+    static async void FireAndForget(
+        ValueTask valueTask,
+        Action<Exception>? onException = null,
+        bool configureAwait = false,
+        bool shouldRethrow = false)
+    {
+        try
+        {
+            await valueTask.ConfigureAwait(configureAwait);
+        }
+        catch (Exception ex) when (onException is not null)
+        {
+            onException(ex);
+            if (shouldRethrow) throw;
+        }
+    }
+
+    static async void FireAndForget(
+        Task task,
+        Action<Exception>? onException = null,
+        bool configureAwait = false,
+        bool shouldRethrow = false)
+    {
+        try
+        {
+            await task.ConfigureAwait(configureAwait);
+        }
+        catch (Exception ex) when (onException is not null)
+        {
+            onException(ex);
+            if (shouldRethrow) throw;
+        }
+    }
 }

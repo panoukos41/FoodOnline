@@ -16,17 +16,17 @@ public sealed class RequestContext
     public required IDictionary<object, object?> Items { get; init; }
 }
 
-public sealed class RequestSucceeded : INotification
+public class RequestSucceeded
 {
     public required RequestContext Context { get; init; }
 
-    public required object Request { get; init; }
+    public required IMessage Request { get; init; }
 }
 
 
-public sealed class RequestFailed : INotification
+public class RequestFailed
 {
     public required RequestContext Context { get; init; }
 
-    public required object Request { get; init; }
+    public required IMessage Request { get; init; }
 }

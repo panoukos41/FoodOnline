@@ -1,15 +1,16 @@
 ﻿using Core.Abstractions.Requests;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Commons.Behaviors;
 
 public sealed class LogRequestBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IBaseRequest
+    where TRequest : IMessage
 {
     private readonly ILoggerFor<TRequest>? loggerFor;
 
-    public LogRequestBehavior(ILoggerFor<TRequest>? loggerFor)
+    public LogRequestBehavior(IServiceProvider serviceProvider)
     {
-        this.loggerFor = loggerFor;
+        loggerFor = serviceProvider.GetService<ILoggerFor<TRequest>>();
     }
 
     public ValueTask<TResponse> Handle(TRequest request, CancellationToken cancellationToken, MessageHandlerDelegate<TRequest, TResponse> next)

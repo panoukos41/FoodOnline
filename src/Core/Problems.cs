@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Core;
 
@@ -66,54 +67,27 @@ public static class ProblemMixins
 
     public static Problem WithMetadata<TMetadata>(this Problem problem, string key, TMetadata metadata)
     {
-        problem = problem with { Metadata = [] };
-        problem.Metadata![key] = JsonSerializer.SerializeToElement(metadata, Options.Json);
-        return problem;
+        var newProblem = problem with { Metadata = [] };
+        newProblem.Metadata[key] = JsonSerializer.SerializeToNode(metadata, Options.Json);
+        return newProblem;
     }
 
-    public static Problem WithMetadata(this Problem problem, Dictionary<string, object> metadata)
+    public static Problem WithMetadata(this Problem problem, JsonObject metadata)
     {
-        problem = problem with { Metadata = [] };
-        foreach (var (k, v) in metadata)
-        {
-            problem.Metadata![k] = JsonSerializer.SerializeToElement(v, Options.Json);
-        }
-        return problem;
+        var newProblem = problem with { Metadata = [] };
+        newProblem.Metadata.CopyFrom(metadata);
+        return newProblem;
     }
 
-    public static Problem AppendMetadata<TMetadata>(this Problem problem, string key, TMetadata metadata)
+    public static Problem WithMetadata(this Problem problem, IDictionary<string, object> metadata)
     {
-        var oldMeta = problem.Metadata;
-        problem = problem with { Metadata = new(capacity: oldMeta?.Count + 1 ?? 1) };
+        if (metadata is not { Count: > 1 })
+            return problem;
 
-        if (oldMeta is not null)
-        {
-            foreach (var (k, v) in oldMeta)
-            {
-                problem.Metadata[k] = v;
-            }
-        }
-
-        problem.Metadata![key] = JsonSerializer.SerializeToElement(metadata, Options.Json);
-        return problem;
-    }
-
-    public static Problem AppendMetadata<TMetadata>(this Problem problem, Dictionary<string, object> metadata)
-    {
-        var oldMeta = problem.Metadata;
-        problem = problem with { Metadata = new(capacity: oldMeta?.Count + 1 ?? 1) };
-
-        if (oldMeta is not null)
-        {
-            foreach (var (k, v) in oldMeta)
-            {
-                problem.Metadata[k] = v;
-            }
-        }
-        foreach (var (k, v) in metadata)
-        {
-            problem.Metadata![k] = JsonSerializer.SerializeToElement(v, Options.Json);
-        }
-        return problem;
+        var newProblem = problem with { Metadata = [] };
+        var jElement = JsonSerializer.SerializeToElement(metadata, Options.Json);
+        var jObject = JsonObject.Create(jElement);
+        newProblem.Metadata.CopyFrom(jObject!);
+        return newProblem;
     }
 }

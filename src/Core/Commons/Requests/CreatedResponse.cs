@@ -4,15 +4,21 @@ namespace Core.Commons.Requests;
 
 public sealed record CreatedResponse
 {
-    public required Uuid Id { get; set; }
+    public required string Id { get; set; }
 
     public CreatedResponse()
     {
     }
 
     [SetsRequiredMembers]
-    public CreatedResponse(Uuid id)
+    public CreatedResponse(string id)
     {
         Id = id;
+    }
+
+    [SetsRequiredMembers]
+    public CreatedResponse(Uuid id)
+    {
+        Id = id.ToString();
     }
 }
