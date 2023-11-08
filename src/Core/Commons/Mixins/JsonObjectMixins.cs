@@ -1,4 +1,5 @@
 ﻿using Core;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Nodes;
 
@@ -27,6 +28,12 @@ public static class JsonObjectMixins
             };
         }
         return obj;
+    }
+
+    [return: NotNullIfNotNull(nameof(obj))]
+    public static ImmutableDictionary<string, JsonElement>? ToImmutableDictionary(this JsonObject? obj)
+    {
+        return obj?.ToImmutableDictionary(x => x.Key, x => JsonSerializer.Deserialize<JsonElement>(x.Value));
     }
 
     [return: NotNullIfNotNull(nameof(obj))]
