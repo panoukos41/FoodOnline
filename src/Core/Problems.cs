@@ -74,6 +74,9 @@ public static class ProblemMixins
 
     public static Problem WithMetadata(this Problem problem, JsonObject metadata)
     {
+        if (metadata is not { Count: > 1 })
+            return problem;
+
         var newProblem = problem with { Metadata = [] };
         newProblem.Metadata.CopyFrom(metadata);
         return newProblem;

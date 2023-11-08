@@ -15,6 +15,20 @@ public static class JsonObjectMixins
         return obj;
     }
 
+    public static JsonObject CopyFrom(this JsonObject obj, IDictionary<string, JsonElement> other)
+    {
+        foreach (var (key, element) in other)
+        {
+            obj[key] = element.ValueKind switch
+            {
+                JsonValueKind.Object => JsonObject.Create(element),
+                JsonValueKind.Array => JsonArray.Create(element),
+                _ => JsonValue.Create(element)
+            };
+        }
+        return obj;
+    }
+
     [return: NotNullIfNotNull(nameof(obj))]
     public static JsonObject? Upsert<T>(this JsonObject? obj, string key, T? value)
     {
