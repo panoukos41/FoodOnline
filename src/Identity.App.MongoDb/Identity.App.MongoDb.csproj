@@ -6,17 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mediator.SourceGenerator" Version="2.1.7" PrivateAssets="all" />
     <PackageReference Include="OpenIddict.Core" Version="4.9.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core.App.MongoDb\Core.App.MongoDb.csproj" />
+    <ProjectReference Include="..\..\src-modules\Core\src\Core.App.MongoDb\Core.App.MongoDb.csproj" />
     <ProjectReference Include="..\Identity\Identity.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Users\Handlers\" />
+    <Folder Include="Tokens\" />
   </ItemGroup>
 
 </Project>
